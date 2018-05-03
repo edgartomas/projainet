@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Company-HTML Bootstrap theme</title>
+    <title>{{ $title }}</title>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -20,6 +20,7 @@
     <![endif]-->
   </head>
   <body>
+  	
 	<header>		
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 			<div class="navigation">
@@ -32,7 +33,7 @@
 							<span class="icon-bar"></span>
 						</button>
 						<div class="navbar-brand">
-							<a href="index.html"><h1>Empresa Gestão Finanças</h1></a>
+							<h1>{{ $title }}</h1>
 						</div>
 					</div>
 					
@@ -51,9 +52,7 @@
 				</div>
 			</div>	
 		</nav>		
-	</header>
-
-	 @yield('content')
+	</header> 
 	
 	<section id="main-slider" class="no-margin">
         <div class="carousel slide">      
@@ -61,6 +60,9 @@
                 <div class="item active" style="background-image: url(images/slider/bg1.jpg)">
                     <div class="container">
                         <div class="row slide-margin">
+
+                        	@yield('content')
+                        	
                             <div class="col-sm-6">
                                 <div class="carousel-content">
                                     <h2 class="animation animated-item-1">Welcome <span>Company</span></h2>

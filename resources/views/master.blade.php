@@ -63,26 +63,7 @@
 
                         	@yield('content')
                         	
-                            <div class="col-sm-6">
-                                <div class="carousel-content">
-                                    <h2 class="animation animated-item-1">Welcome <span>Company</span></h2>
-                                    <p class="animation animated-item-2">Accusantium doloremque laudantium totam rem aperiam, eaque ipsa...</p>
-                                    <a class="btn-slide animation animated-item-3" href="#">Read More</a>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6 hidden-xs animation animated-item-4">
-                                <div class="slider-img">
-                                    <img src="images/slider/img3.png" class="img-responsive">
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div><!--/.item-->             
-            </div><!--/.carousel-inner-->
-        </div><!--/.carousel-->
-    </section><!--/#main-slider-->
+               
 	
 	
 	<section id="conatcat-info">
@@ -90,38 +71,17 @@
             <div class="row">
                 <div class="col-sm-8">
                     <div class="media contact-info wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
-                        <div class="pull-left">
-                            <i class="fa fa-phone"></i>
-                        </div>
-                        <div class="media-body">
-                            <h2>Have a question or need a custom quote?</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation +0123 456 70 80</p>
-                        </div>
+                       
+                       
                     </div>
                 </div>
             </div>
         </div><!--/.container-->    
     </section><!--/#conatcat-info-->
 	
-	<footer>
-		<div class="footer">
-			<div class="container">
-				<div class="social-icon">
-					<div class="col-md-4">
-						<ul class="social-network">
-							<li><a href="#" class="fb tool-tip" title="Facebook"><i class="fa fa-facebook"></i></a></li>
-							<li><a href="#" class="twitter tool-tip" title="Twitter"><i class="fa fa-twitter"></i></a></li>
-							<li><a href="#" class="gplus tool-tip" title="Google Plus"><i class="fa fa-google-plus"></i></a></li>
-							<li><a href="#" class="linkedin tool-tip" title="Linkedin"><i class="fa fa-linkedin"></i></a></li>
-							<li><a href="#" class="ytube tool-tip" title="You Tube"><i class="fa fa-youtube-play"></i></a></li>
-						</ul>	
-					</div>
-				</div>
+	
 				
-				<div class="col-md-4 col-md-offset-4">
-					<div class="copyright">
-						&copy; June  2015 by <a target="_blank" href="http://bootstraptaste.com/" title="Free Twitter Bootstrap WordPress Themes and HTML templates">Bootstrap Themes</a>. All Rights Reserved.
-					</div>
+				
                     <!-- 
                         All links in the footer should remain intact. 
                         Licenseing information is available at: http://bootstraptaste.com/license/

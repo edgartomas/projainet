@@ -4,13 +4,15 @@
 <table class="table table-striped">
 	<thead> <tr> <th><font color="black">Name </font></th> <th><font color="black">Email </font></th> <th><font color="black">Actions </font></th> <th></th> </tr> </thead>
 
+ 
+
 	 
 	<tbody>
 		@foreach ($users as $user)
 		<tr>
 			<td> <font color="black">{{ $user->name }} </font> </td>
 			<td> <font color="black">{{ $user->email }} </font> </td>
-			<td><a href="/users/{{ $user->id }}/edit" class="btn btn-xs btn-primary" >Edit</a></td>
+			<td><a href="{{ route('users.create')}}" class="btn btn-xs btn-danger">Add Movement</a></td>
 		
 			<td>
 				<form action="#" method="post">

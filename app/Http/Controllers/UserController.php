@@ -20,5 +20,14 @@ public function index()
     }
 
 
+ public function create()
+    {
+    	$user = new User();
+    	$title = 'Adicionar Movimento';
+
+    	return view('users.add', compact('user', 'title'));
+
+    }
+
 }
    

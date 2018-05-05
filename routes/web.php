@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('master');
-});
+Route::get('/', 'WelcomeController@index');
 
 
 Route::get('/users', 'UserController@index')->name('users.index');

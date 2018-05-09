@@ -18,6 +18,10 @@ Route::get('/users', 'UserController@index')->name('users.index');
 
 Route::get('/users/create', 'UserController@create')->name("users.create");
 
+
+Route::get('/home', 'AccountController@index')->name('home');
+
+
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+

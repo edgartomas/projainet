@@ -23,6 +23,8 @@ class UserController extends Controller
             return view('users.list', compact('title', 'users'));
         }
 
+     
+
 
     public function create()
         {
@@ -32,6 +34,9 @@ class UserController extends Controller
             return view('users.add', compact('user', 'title'));
 
         }
+
+
+    
 
 }
    

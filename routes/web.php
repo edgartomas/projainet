@@ -16,7 +16,7 @@ Route::get('/', 'WelcomeController@index');
 
 Route::get('/users', 'UserController@index')->name('users.index');
 
-Route::get('/users/create', 'UserController@create')->name("users.create");
+Route::get('/users/{user}/promote', 'UserController@promote');
 
 Auth::routes();
 

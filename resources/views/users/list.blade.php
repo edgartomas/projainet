@@ -2,9 +2,6 @@
 @section('content')
 <div class="container-fluid">
 	<div class="row">
-		<div>
-		
-		</div>
 		<div class="col text-center">
 			<h1>{{ $title }}</h1>
 		</div>
@@ -16,31 +13,31 @@
 				<div class="card-header">
 					Filter
 				</div>
-				<form action="" method="GET">
+				<form action="{{ action('UserController@index') }}" method="GET">
 					<ul class="list-group list-group-flush">
 						<li class="list-group-item">
-						<h6 class="card-subtitle mb-2 text-muted">Name</h6>
-						<input class="form-control" id="exampleInputEmail1">
+							<h6 class="card-subtitle mb-2 text-muted">Name</h6>
+							<input type="text" class="form-control" id="name" name="name">
 						</li>
 						<li class="list-group-item">
 							<h6 class="card-subtitle mb-2 text-muted">Type</h6>
 							<div class="custom-control custom-radio">
-									<input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
-									<label class="custom-control-label" for="customRadio1">Admin</label>
+								<input type="radio" id="typeRadio1" name="type" class="custom-control-input" value="admin">
+								<label class="custom-control-label" for="typeRadio1">Admin</label>
 							</div>
 							<div class="custom-control custom-radio">
-								<input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
-								<label class="custom-control-label" for="customRadio2">Normal</label>
+								<input type="radio" id="typeRadio2" name="type" class="custom-control-input" value="normal">
+								<label class="custom-control-label" for="typeRadio2">Normal</label>
 							</div>
 						</li>
 						<li class="list-group-item">
 						<h6 class="card-subtitle mb-2 text-muted">Status</h6>
 							<div class="custom-control custom-radio">
-									<input type="radio" id="statusRadio1" name="statusRadio" class="custom-control-input">
-									<label class="custom-control-label" for="statusRadio1">Unblocked</label>
+								<input type="radio" id="statusRadio1" name="status" class="custom-control-input" value="unblocked">
+								<label class="custom-control-label" for="statusRadio1">Unblocked</label>
 							</div>
 							<div class="custom-control custom-radio">
-								<input type="radio" id="statusRadio2" name="statusRadio" class="custom-control-input">
+								<input type="radio" id="statusRadio2" name="status" class="custom-control-input" value="blocked">
 								<label class="custom-control-label" for="statusRadio2">Blocked</label>
 							</div>
 						</li>
@@ -53,6 +50,9 @@
 			</div>
 		</div>
 		<div class="col">
+		@if(count($users) == 0)
+			<h4>No users found</h4>
+		@else
 			<table class="table">
 				<thead> 
 				<tr> 
@@ -90,8 +90,9 @@
 				</tbody>
 			</table>
 			<div class="d-flex justify-content-center">
-				{{$users->links()}}
+				{{$users->appends($_GET)->links()}}
 			</div>
+			@endif
 		</div>
 	</div>
 </div>

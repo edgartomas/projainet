@@ -36,12 +36,12 @@
 						<li class="list-group-item">
 						<h6 class="card-subtitle mb-2 text-muted">Status</h6>
 							<div class="custom-control custom-radio">
-									<input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
-									<label class="custom-control-label" for="customRadio1">Unblocked</label>
+									<input type="radio" id="statusRadio1" name="statusRadio" class="custom-control-input">
+									<label class="custom-control-label" for="statusRadio1">Unblocked</label>
 							</div>
 							<div class="custom-control custom-radio">
-								<input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
-								<label class="custom-control-label" for="customRadio2">Blocked</label>
+								<input type="radio" id="statusRadio2" name="statusRadio" class="custom-control-input">
+								<label class="custom-control-label" for="statusRadio2">Blocked</label>
 							</div>
 						</li>
 						<li class="list-group-item text-right">

@@ -1,6 +1,22 @@
 @extends('layouts.app')
 @section('content')
 <div class="container-fluid">
+	<div>
+		<div class="row">
+			<div class="col">
+				@if ($errors->any())
+					<div class="alert alert-danger">
+						{{ $errors->first() }}
+					</div>
+			@endif
+			@if (session('status'))
+			<div class="alert alert-success">
+					{{ session('status') }}
+				</div>
+			@endif
+			</div>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col text-center">
 			<h1>{{ $title }}</h1>
@@ -82,19 +98,23 @@
 						<td>
 						@if($user != Auth::user())
 							@if($user->admin == 0)
-								<form action="{{ action('UserController@promote', $user->id) }}">
-									<button type="submit" class="btn btn-primary">Promote</button>
+								<form class="from-inline" action="{{ action('UserController@promote', $user->id) }}" style="display:inline;">
+									<button type="submit" class="btn btn-primary btn-sm">Promote</button>
 								</form> 
 							@else
-								<form action="{{ action('UserController@promote', $user->id) }}">
-									<button type="submit" class="btn btn-primary">Demote</button>
+								<form class="from-inline" action="{{ action('UserController@demote', $user->id) }}" style="display:inline;">
+									<button type="submit" class="btn btn-primary btn-sm">Demote</button>
 								</form> 
 							@endif
 
 							@if($user->blocked == 0)
-								Bloquear
+								<form class="form-inline" action="{{ action('UserController@block', $user->id) }}" style="display:inline;">
+									<button type="submit" class="btn btn-info btn-sm">Block</button>
+								</form> 
 							@else
-								Desbloquear
+								<form class="form-inline" action="{{ action('UserController@unblock', $user->id) }}" style="display:inline;">
+									<button type="submit" class="btn btn-info btn-sm">unblock</button>
+								</form> 
 							@endif
 						@endif
 						</td>

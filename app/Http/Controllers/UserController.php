@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
+use Auth;
 
 class UserController extends Controller
 {
@@ -47,6 +48,69 @@ class UserController extends Controller
             $title = 'List of users';
 
             return view('users.list', compact('title', 'users'));
+        }
+
+        public function promote($id){
+
+            if(Auth::id() == $id){
+                return redirect()->action('UserController@index')->withErrors("You can't promote yourself.");
+            }
+    
+            $user = User::findOrFail($id);
+
+            $user->admin = 1;
+    
+            $user->save();
+    
+            return redirect()->action('UserController@index')->with('status', 'User prometed successfully.');
+        }
+
+        public function demote($id){
+
+            if(Auth::id() == $id){
+                return redirect()->action('UserController@index')->withErrors("You can't demote yourself.");
+            }
+    
+            $user = User::findOrFail($id);
+
+            $user->admin = 0;
+    
+            $user->save();
+    
+            return redirect()->action('UserController@index')->with('status', 'User demoted successfully.');
+    
+        }
+
+        public function block($id){
+
+            if(Auth::id() == $id){
+                return redirect()->action('UserController@index')->withErrors("You can't block yourself.");
+            }
+    
+            $user = User::findOrFail($id);
+
+            $user->blocked = 1;
+    
+            $user->save();
+    
+            return redirect()->action('UserController@index')->with('status', 'User blocked successfully.');
+    
+        }
+
+        public function unblock($id){
+
+            if(Auth::id() == $id){
+                return redirect()->action('UserController@index')->withErrors("You can't unblock yourself.");
+            }
+    
+            $user = User::findOrFail($id);
+
+            $user->blocked = 0;
+    
+            $user->save();
+    
+            return redirect()->action('UserController@index')->with('status', 'User unblocked successfully.');
+    
         }
 
 

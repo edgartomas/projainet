@@ -18,6 +18,12 @@ Route::get('/users', 'UserController@index')->name('users.index');
 
 Route::get('/users/{user}/promote', 'UserController@promote');
 
+Route::get('/users/{user}/demote', 'UserController@demote');
+
+Route::get('/users/{user}/block', 'UserController@block');
+
+Route::get('/users/{user}/unblock', 'UserController@unblock');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

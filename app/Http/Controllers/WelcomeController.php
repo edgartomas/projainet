@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\Movement;
+use App\Account;
 
 class WelcomeController extends Controller
 {
@@ -14,6 +16,10 @@ class WelcomeController extends Controller
 
         $numUsers = User::count();
 
-        return view('master', compact('title', 'numUsers'));
+        $numMovements = Movement::count();
+
+        $numAccounts = Account::count();
+
+        return view('welcome', compact('title', 'numUsers', 'numAccounts', 'numMovements'));
     }
 }

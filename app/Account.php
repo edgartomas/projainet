@@ -13,4 +13,8 @@ class Account extends Model
     protected $hidden = [
         'code', 'current_balance', 'last_movement_date'
     ];
+
+    public function user(){
+        return $this->belongsTo('App\User', 'owner_id');
+    }
 }

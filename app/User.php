@@ -34,4 +34,7 @@ class User extends Authenticatable
     public function blockedToString(){
         return $this->blocked == 0 ? 'Unblocked' : 'Blocked';
     }
+    public function accounts(){
+        return $this->hasMany('App\Account', 'owner_id');
+    }
 }

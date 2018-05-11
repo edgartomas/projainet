@@ -8,11 +8,23 @@ use App\Account;
 class AccountController extends Controller
 {
     public function index()
-    {
-         $accounts = Account::paginate(10);
+    {   
+         $accounts = Account::all();
+
+
             $title = 'List of Moviments';
 
-            return view('home', compact('title', 'accounts'));
+            return view('home', compact('title', 'accounts'));       
+    }
+
+     public function UserAccount($owner_id)
+    {
         
+        $account = Account::find($owner_id);
+        $title = 'List users';
+
+
+        return view('home', compact('title', 'account'));  // temos que passar o titulo , não esquecer
+    
     }
 }

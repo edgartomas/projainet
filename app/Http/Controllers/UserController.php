@@ -50,9 +50,9 @@ class UserController extends Controller
             return view('users.list', compact('title', 'users'));
         }
 
-<<<<<<< HEAD
+
      
-=======
+
         public function promote($id){
 
             if(Auth::id() == $id){
@@ -115,7 +115,7 @@ class UserController extends Controller
             return redirect()->action('UserController@index')->with('status', 'User unblocked successfully.');
     
         }
->>>>>>> 602e4956f80f4a40b8d1261184c086fe091faeb4
+
 
 
     public function create()

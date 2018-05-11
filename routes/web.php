@@ -26,6 +26,7 @@ Route::get('/users/{user}/unblock', 'UserController@unblock');
 
 
 Route::get('/home', 'AccountController@index')->name('home');
+Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
 
 
 Auth::routes();

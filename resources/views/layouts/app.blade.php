@@ -18,6 +18,16 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{{ route('home') }}">Home</a>
 				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Profiles
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					<a class="dropdown-item" href="{{ action('ProfileController@index') }}">List</a>
+					<a class="dropdown-item" href="{{ action('AssociatesController@index') }}">Associates</a>
+					<a class="dropdown-item" href="{{ action('AssociateOfController@index') }}">Associate-Of</a>
+					</div>
+				</li>
 				@if(Auth::user()->admin == 1)
 				<li class="nav-item">
 					<a class="nav-link" href="{{ action('UserController@index' )}}">Users</a>
@@ -32,6 +42,9 @@
 				<a class="btn btn-outline-primary" href="{{ route('register') }}">Register</a>
 			@endguest
 			@auth
+				@if(Auth::user()->profile_photo != null)	
+					<img src="{{ asset('storage/profiles/' . Auth::user()->profile_photo )}}" style ="width:40px; height:40px; float:left; border-radius: 50%; margin-right: 25px; ">
+				@endif
 				<ul class="navbar-nav mr-auto">
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -34,4 +34,13 @@ class User extends Authenticatable
     public function blockedToString(){
         return $this->blocked == 0 ? 'Unblocked' : 'Blocked';
     }
+
+    public function associate(){
+        return $this->belongsToMany( User::class, 'associate_members', 'main_user_id', 'associated_user_id');
+    }
+
+    public function associateOf(){
+        return $this->belongsToMany( User::class, 'associate_members', 'associated_user_id', 'main_user_id');
+    }
+    
 }

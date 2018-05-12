@@ -1,22 +1,26 @@
 @extends('layouts.app')
 @section('content')
 <div class="container-fluid">
-	<div>
-		<div class="row">
+	<div class="row">
 			<div class="col">
 				@if ($errors->any())
 					<div class="alert alert-danger">
 						{{ $errors->first() }}
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
 			@endif
 			@if (session('status'))
-			<div class="alert alert-success">
+				<div class="alert alert-success">
 					{{ session('status') }}
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
 				</div>
 			@endif
 			</div>
 		</div>
-	</div>
 	<div class="row">
 		<div class="col text-center">
 			<h1>{{ $title }}</h1>

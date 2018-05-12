@@ -5,22 +5,26 @@ $associates = Auth::user()->associate;
 $associatesOf = Auth::user()->associateOf
 @endphp
 <div class="container-fluid">
-	<div>
-		<div class="row">
+	<div class="row">
 			<div class="col">
 				@if ($errors->any())
 					<div class="alert alert-danger">
 						{{ $errors->first() }}
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
 			@endif
 			@if (session('status'))
-			<div class="alert alert-success">
+				<div class="alert alert-success">
 					{{ session('status') }}
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
 				</div>
 			@endif
 			</div>
 		</div>
-	</div>
 	<div class="row">
 		<div class="col text-center">
 			<h1>{{ $title }}</h1>
@@ -67,27 +71,38 @@ $associatesOf = Auth::user()->associateOf
 					@foreach ($users as $user)
 					<tr>
 						<td>
-						@if($user->profile_photo != null)
-							<img src="{{ asset('storage/profiles/' . $user->profile_photo )}}" style ="width:40px; height:40px; float:left; border-radius: 50%; margin-right: 25px;">
-						@endif	
+						@isset($user->profile_photo)
+							<img class="img-fluid rounded" src="{{ asset('storage/profiles/' . $user->profile_photo )}}" style ="width:40px; height:40px; float:left; border-radius: 50%;">
+						@endisset
+						@empty($user->profile_photo)
+							<img class="img-fluid rounded" src="{{ asset('storage/profiles/default.jpg') }}" style ="width:40px; height:40px; float:left; border-radius: 50%;">
+						@endempty	
 						</td>
 						<td>{{ $user->name }}</td>
-                        <td>
-							@foreach ($associates as $associate)
-								@if($associate->id == $user->id)
+						<td>
+							@if($associates->contains($user))
 								<span class="badge badge-pill badge-success">Associate</span>
-								@endif
-							@endforeach
+							@endif
 						</td>
-                        <td>
-							@foreach ($associatesOf as $associate)
-								@if($associate->id == $user->id)
-									<span class="badge badge-pill badge-success">Associate-Of</span>
-								@endif
-							@endforeach
+						<td>
+							@if($associatesOf->contains($user))
+								<span class="badge badge-pill badge-success">Associate-Of</span>
+							@endif
 						</td>
-                        <td>
-							<button type="button" class="btn btn-primary">Associate/Desassociate</button>
+						<td>
+							@if($associates->contains($user))
+								<form method="post" action="{{ action('AssociatesController@destroy', $user->id) }}">
+									@csrf
+									@method('delete')
+									<button type="submit" class="btn btn-danger" href="">Desassociate</a>
+								</form>
+							@else
+								<form method="post" action="{{ action('AssociatesController@create') }}">
+									@csrf
+									<input type="text" class="form-control" name="associated_user" style="display: none;" value="{{ $user->id }}">
+									<button type="submit" class="btn btn-primary">Associate</button>
+								</form>
+							@endif
 						</td>
 					</tr>
 					@endforeach
@@ -100,6 +115,4 @@ $associatesOf = Auth::user()->associateOf
 		</div>
 	</div>
 </div>
-
-
 @endsection('content') 

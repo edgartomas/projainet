@@ -18,6 +18,9 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{{ route('home') }}">Home</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ route('home') }}">Accounts</a>
+				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					Profiles
@@ -42,16 +45,19 @@
 				<a class="btn btn-outline-primary" href="{{ route('register') }}">Register</a>
 			@endguest
 			@auth
-				@if(Auth::user()->profile_photo != null)	
-					<img src="{{ asset('storage/profiles/' . Auth::user()->profile_photo )}}" style ="width:40px; height:40px; float:left; border-radius: 50%; margin-right: 25px; ">
-				@endif
+				@isset(Auth::user()->profile_photo)	
+					<img class="rounded" src="{{ asset('storage/profiles/' . Auth::user()->profile_photo )}}" style ="width:40px; height:40px; float:left; border-radius: 50%;">
+				@endisset
+				@empty(Auth::user()->profile_photo)
+                	<img class="rounded" src="{{ asset('storage/profiles/default.jpg') }}" style ="width:40px; height:40px; float:left; border-radius: 50%;">
+            	@endempty
 				<ul class="navbar-nav mr-auto">
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{{ Auth::user()->name }}
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<a class="dropdown-item" href="#">Edit</a>
+						<a class="dropdown-item" href="{{ action('MyProfileController@index')}}">Profile</a>
 						<div class="dropdown-divider"></div>
 							<form id="frm-logout" action="{{ route('logout') }}" method="POST">
 								{{ csrf_field() }}
@@ -70,8 +76,6 @@
 	</nav>
     <br>
 	
-
-
     @yield('content')
    
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

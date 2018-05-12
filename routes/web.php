@@ -31,6 +31,7 @@ Route::get('me/associates', 'AssociatesController@index');
 Route::get('me/associate-of', 'AssociateOfController@index');
 
 Route::get('/home', 'AccountController@index')->name('home');
+Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
 
 
 Auth::routes();

@@ -51,6 +51,9 @@ class UserController extends Controller
         }
 
      
+
+     
+
         public function promote($id){
 
             if(Auth::id() == $id){
@@ -113,6 +116,7 @@ class UserController extends Controller
             return redirect()->action('UserController@index')->with('status', 'User unblocked successfully.');
     
         }
+
 
 
     public function create()

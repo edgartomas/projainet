@@ -43,4 +43,7 @@ class User extends Authenticatable
         return $this->belongsToMany( User::class, 'associate_members', 'associated_user_id', 'main_user_id');
     }
     
+    public function accounts(){
+        return $this->hasMany('App\Account', 'owner_id');
+    }
 }

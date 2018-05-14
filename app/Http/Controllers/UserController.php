@@ -50,12 +50,13 @@ class UserController extends Controller
             return view('users.list', compact('title', 'users'));
         }
 
+     
 
      
 
         public function promote($id){
 
-            if(Auth::id() == $id){
+            if(Auth::user()->cannot('do-operation', $id)){
                 return redirect()->action('UserController@index')->withErrors("You can't promote yourself.");
             }
     
@@ -70,7 +71,7 @@ class UserController extends Controller
 
         public function demote($id){
 
-            if(Auth::id() == $id){
+            if(Auth::user()->cannot('do-operation', $id)){
                 return redirect()->action('UserController@index')->withErrors("You can't demote yourself.");
             }
     
@@ -86,7 +87,7 @@ class UserController extends Controller
 
         public function block($id){
 
-            if(Auth::id() == $id){
+            if(Auth::user()->cannot('do-operation', $id)){
                 return redirect()->action('UserController@index')->withErrors("You can't block yourself.");
             }
     
@@ -102,7 +103,7 @@ class UserController extends Controller
 
         public function unblock($id){
 
-            if(Auth::id() == $id){
+            if(Auth::user()->cannot('do-operation', $id)){
                 return redirect()->action('UserController@index')->withErrors("You can't unblock yourself.");
             }
     

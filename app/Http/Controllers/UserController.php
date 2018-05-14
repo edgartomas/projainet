@@ -49,11 +49,7 @@ class UserController extends Controller
 
             return view('users.list', compact('title', 'users'));
         }
-
-     
-
-     
-
+        
         public function promote($id){
 
             if(Auth::user()->cannot('do-operation', $id)){
@@ -116,7 +112,6 @@ class UserController extends Controller
             return redirect()->action('UserController@index')->with('status', 'User unblocked successfully.');
     
         }
-
 
 
     public function create()

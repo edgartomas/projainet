@@ -26,8 +26,13 @@ Route::get('/users/{user}/unblock', 'UserController@unblock');
 
 
 Route::get('/home', 'AccountController@index')->name('home');
-Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
+//Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
+Route::get('/home/{movement}/movement', 'MovementController@indexMovements');
 
+
+Route::get('/home/{account}/edit', 'AccountController@edit')->name('accounts.edit');
+
+Route::put('/home/{user}/edit', 'AccountController@update')->name('accounts.update');
 
 Auth::routes();
 

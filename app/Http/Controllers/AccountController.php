@@ -7,6 +7,11 @@ use App\Account;
 
 class AccountController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {   
          $accounts = Account::all();

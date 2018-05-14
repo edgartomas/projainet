@@ -7,6 +7,11 @@ use App\Movement;
 
 class MovementController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function indexMovements()
     {
          $movements = Movement::paginate(10);

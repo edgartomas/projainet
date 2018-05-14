@@ -8,6 +8,11 @@ use Auth;
 
 class AssociateOfController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(){
 
         $title = 'List associate of';

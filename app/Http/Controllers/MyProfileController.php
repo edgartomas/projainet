@@ -8,7 +8,12 @@ use App\User;
 use Hash;
 
 class MyProfileController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(){
 
         $title = 'My Profile';

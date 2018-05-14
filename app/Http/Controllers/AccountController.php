@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Account;
 use App\User;
+use App\Movement;
 
 class AccountController extends Controller
 {
@@ -14,11 +17,12 @@ class AccountController extends Controller
       $user =Auth::user();
       //$accounts = $user->accounts();
          $accounts = Account::all();
+         $movements = Movement::all();
 
 
             $title = 'List of Moviments';
 
-            return view('home', compact('title', 'accounts'));       
+            return view('home', compact('title', 'accounts', 'movements'));       
     }
 
 

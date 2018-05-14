@@ -39,13 +39,13 @@ Route::post('me/associates', 'AssociatesController@create');
 Route::delete('me/associates/{user}', 'AssociatesController@destroy');
 
 Route::get('/home', 'AccountController@index')->name('home');
-<<<<<<< HEAD
+
 //Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
 Route::get('/home/{movement}/movement', 'MovementController@indexMovements');
-=======
+
 
 Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
->>>>>>> b4b90eb6710555218aa6b7332331223f4aa588a5
+
 
 
 Route::get('/home/{account}/edit', 'AccountController@edit')->name('accounts.edit');

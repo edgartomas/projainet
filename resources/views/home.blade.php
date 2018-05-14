@@ -59,23 +59,23 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($movements as $movement)
+                @for ($i = 0; $i < 10; $i++)
                 <tr>
-                    @if($movement->movement_category_id == Auth::user()->id)
+                    @if($movements[$i]->movement_category_id == Auth::user()->id )
                     <td> 
-                        {{$movement->movement_category_id}}
+                        {{$movements[$i]->movement_category_id}}
                     </td>
                     <td> 
-                        {{$movement->movement_category_id}}
+                        {{$movements[$i]->value}}
                     </td>
                                                         
                     @endif
                 </tr>
-                @endforeach
+                @endfor
             </tbody>
             
 
-        </table>
+        </table> 
 
 
 		

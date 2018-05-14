@@ -16,17 +16,41 @@ Route::get('/', 'WelcomeController@index');
 
 Route::get('/users', 'UserController@index')->name('users.index');
 
-Route::get('/users/{user}/promote', 'UserController@promote');
+Route::patch('/users/{user}/promote', 'UserController@promote');
 
-Route::get('/users/{user}/demote', 'UserController@demote');
+Route::patch('/users/{user}/demote', 'UserController@demote');
 
-Route::get('/users/{user}/block', 'UserController@block');
+Route::patch('/users/{user}/block', 'UserController@block');
 
-Route::get('/users/{user}/unblock', 'UserController@unblock');
+Route::patch('/users/{user}/unblock', 'UserController@unblock');
 
+Route::get('/me', 'MyProfileController@index');
+
+Route::patch('/me/password', 'MyProfileController@updatePassword');
+
+Route::get('/profiles', 'ProfileController@index');
+
+Route::get('me/associates', 'AssociatesController@index');
+
+Route::get('me/associate-of', 'AssociateOfController@index');
+
+Route::post('me/associates', 'AssociatesController@create');
+
+Route::delete('me/associates/{user}', 'AssociatesController@destroy');
 
 Route::get('/home', 'AccountController@index')->name('home');
 
+//Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
+Route::get('/home/{movement}/movement', 'MovementController@indexMovements');
+
+
+Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
+
+
+
+Route::get('/home/{account}/edit', 'AccountController@edit')->name('accounts.edit');
+
+Route::put('/home/{user}/edit', 'AccountController@update')->name('accounts.update');
 
 Auth::routes();
 

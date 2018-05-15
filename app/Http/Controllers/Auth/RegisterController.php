@@ -80,6 +80,8 @@ class RegisterController extends Controller
             $filepath = Storage::putFile('public/profiles', request()->file('profile_photo'));
 
             $filename = basename($filepath);
+        } else {
+            $filename = null;
         }
 
         $user->update(['profile_photo' => $filename]);

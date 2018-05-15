@@ -53,6 +53,8 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            //'phone' => 'nullable|regex para aceitar + e rejeitar nums',
+            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png'
         ]);
     }
 
@@ -64,12 +66,24 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $request = request();
+
+        if($request->hasfile('profile_photo') && $request->file('profile_photo')->isValid()){
+            return User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'phone' => $data['phone'] ?? null,
+                'profile_photo' => (Storage::putfile('public/profiles', $request->file('profile_photo'))) ?? null
+            ]);
+        }
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'phone' => $data['phone'],
-            'profile_photo' => $data['profile_photo']
+            'phone' => $data['phone'] ?? null,
+        //    'profile_photo' => $data['profile_photo']
         ]);
     }
 }

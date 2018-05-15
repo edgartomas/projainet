@@ -29,10 +29,10 @@
 					@foreach ($users as $user)
 					<tr>
 						<td>
-						@isset(Auth::user()->profile_photo)	
-							<img class="rounded" src="{{ asset('storage/profiles/' . Auth::user()->profile_photo )}}" style ="width:40px; height:40px; float:left; border-radius: 50%;">
+						@isset($user->profile_photo)	
+							<img class="rounded" src="{{ asset('storage/profiles/' . $user->profile_photo )}}" style ="width:40px; height:40px; float:left; border-radius: 50%;">
 						@endisset
-						@empty(Auth::user()->profile_photo)
+						@empty($user->profile_photo)
 							<img class="rounded" src="{{ asset('storage/profiles/default.jpg') }}" style ="width:40px; height:40px; float:left; border-radius: 50%;">
 						@endempty	
 						</td>

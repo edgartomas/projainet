@@ -38,29 +38,31 @@
         </div>
         <div class="col">
         <h5 class="text-center my-4">Update Profile</h5>
-            <form>
+            <form method="post" action="{{ action('MyProfileController@update') }}" enctype="multipart/form-data">
+                @csrf
+                @method('put')
                 <div class="form-group row">
-                    <label for="exampleInputEmail1" class="col-sm-2 col-form-label">Name</label>
+                    <label for="name" class="col-sm-2 col-form-label">Name</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{ $user->name }}">
+                        <input type="text" class="form-control" id="name" name="name"  aria-describedby="emailHelp" value="{{ $user->name }}">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="exampleInputPassword1" class="col-sm-2 col-form-label">E-Mail</label>
+                    <label for="email" class="col-sm-2 col-form-label">E-Mail</label>
                     <div class="col-sm-10">
-                        <input type="email" class="form-control" id="exampleInputPassword1" value="{{ $user->email }}">
+                        <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="exampleInputPassword1" class="col-sm-2 col-form-label">Phone</label>
+                    <label for="phone" class="col-sm-2 col-form-label">Phone</label>
                     <div class="col-sm-10">
-                        <input type="tel" class="form-control" id="exampleInputPassword1" value="{{ $user->phone }}">
+                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ $user->phone }}">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="exampleFormControlFile1" class="col-sm-2 col-form-label">Photo</label>
+                    <label for="profile_photo" class="col-sm-2 col-form-label">Photo</label>
                     <div class="col-sm-10">
-                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                        <input type="file" class="form-control-file" id="profile_photo" name="profile_photo">
                     </div>
                 </div>
                 <div class="text-right">

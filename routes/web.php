@@ -26,6 +26,8 @@ Route::patch('/users/{user}/unblock', 'UserController@unblock');
 
 Route::get('/me', 'MyProfileController@index');
 
+Route::put('/me/profile', 'MyProfileController@update');
+
 Route::patch('/me/password', 'MyProfileController@updatePassword');
 
 Route::get('/profiles', 'ProfileController@index');

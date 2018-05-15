@@ -49,12 +49,13 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+
         return Validator::make($data, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
             //'phone' => 'nullable|regex para aceitar + e rejeitar nums',
-            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png'
+            'profile_photo' => 'nullable|image'
         ]);
     }
 
@@ -66,24 +67,23 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $request = request();
 
-        if($request->hasfile('profile_photo') && $request->file('profile_photo')->isValid()){
-            return User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-                'phone' => $data['phone'] ?? null,
-                'profile_photo' => (Storage::putfile('public/profiles', $request->file('profile_photo'))) ?? null
-            ]);
-        }
-
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'phone' => $data['phone'] ?? null,
-        //    'profile_photo' => $data['profile_photo']
         ]);
+
+        if(request()->hasfile('profile_photo') && request()->file('profile_photo')->isValid()){
+
+            $filepath = Storage::putFile('public/profiles', request()->file('profile_photo'));
+
+            $filename = basename($filepath);
+        }
+
+        $user->update(['profile_photo' => $filename]);
+
+        return $user;
     }
 }

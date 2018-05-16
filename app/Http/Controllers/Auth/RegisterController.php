@@ -54,7 +54,7 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            //'phone' => 'nullable|regex para aceitar + e rejeitar nums',
+            'phone' => 'nullable|regex:/(\+351)\s[0-9]{3}\s[0-9]{3}\s[0-9]{3}|[0-9]{3}\s[0-9]{3}\s[0-9]{3}|(\+351)\s[0-9]{9}|[0-9]{9}/',
             'profile_photo' => 'nullable|image'
         ]);
     }
@@ -72,7 +72,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'phone' => $data['phone'] ?? null,
+            'phone' => $data['phone'] ?? null, 
         ]);
 
         if(request()->hasfile('profile_photo') && request()->file('profile_photo')->isValid()){

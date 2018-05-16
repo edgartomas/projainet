@@ -18,8 +18,15 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{{ route('home') }}">Home</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ route('home') }}">Accounts</a>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Accounts
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					<a class="dropdown-item" href="{{ action('AccountController@all', Auth::user()) }}">All</a>
+					<a class="dropdown-item" href="{{ action('AccountController@opened', Auth::user()) }}">Open</a>
+					<a class="dropdown-item" href="{{ action('AccountController@closed', Auth::user()) }}">Closed</a>
+					</div>
 				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

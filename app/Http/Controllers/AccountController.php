@@ -82,16 +82,28 @@ class AccountController extends Controller
     }
 
     public function close($account){
-        Account::findOrFail($account)->delete();
+        $account = Account::withTrashed()->findOrFail($account);
+        if(Auth::user()->can('do-operation', $account->owner_id)){
+            return back()->withErrors("You can't close this account");
+        }
+        $account->delete();
         return back()->with('status', 'Account closed.');
     }
 
     public function reopen($account){
-        Account::withTrashed()->findOrFail($account)->restore();
+        $account = Account::withTrashed()->findOrFail($account);
+        if(Auth::user()->can('do-operation', $account->owner_id)){
+            return back()->withErrors("You can't re-open this account");
+        }
+        $account->restore();
         return back()->with('status', 'Account re-opened.');
     }
 
     public function destroy($account){
+
+        if(Auth::user()->can('do-operation', $account->owner_id)){
+            return back()->withErrors("You can't remove this account");
+        }
 
         if(!isset($account->last_movement_date) || !$account->trashed()){
             return back()->withErrors('Account cannot be removed.');

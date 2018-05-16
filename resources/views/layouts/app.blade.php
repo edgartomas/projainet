@@ -23,9 +23,9 @@
 					Accounts
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					<a class="dropdown-item" href="{{ action('AccountController@all', Auth::user()) }}">All</a>
-					<a class="dropdown-item" href="{{ action('AccountController@opened', Auth::user()) }}">Open</a>
-					<a class="dropdown-item" href="{{ action('AccountController@closed', Auth::user()) }}">Closed</a>
+					<a class="dropdown-item" href="{{ route('accounts.index', Auth::user()) }}">All</a>
+					<a class="dropdown-item" href="{{ route('accounts.opened', Auth::user()) }}">Open</a>
+					<a class="dropdown-item" href="{{ route('accounts.closed', Auth::user()) }}">Closed</a>
 					</div>
 				</li>
 				<li class="nav-item dropdown">
@@ -33,14 +33,14 @@
 					Profiles
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					<a class="dropdown-item" href="{{ action('ProfileController@index') }}">List</a>
-					<a class="dropdown-item" href="{{ action('AssociatesController@index') }}">Associates</a>
-					<a class="dropdown-item" href="{{ action('AssociateOfController@index') }}">Associate-Of</a>
+					<a class="dropdown-item" href="{{ route('users.profiles') }}">List</a>
+					<a class="dropdown-item" href="{{ route('users.associates') }}">Associates</a>
+					<a class="dropdown-item" href="{{ route('users.associatesOf') }}">Associate-Of</a>
 					</div>
 				</li>
 				@if(Auth::user()->admin == 1)
 				<li class="nav-item">
-					<a class="nav-link" href="{{ action('UserController@index' )}}">Users</a>
+					<a class="nav-link" href="{{ route('users.index' )}}">Users</a>
 				</li>
 				@endif
 			</ul>
@@ -64,7 +64,7 @@
 						{{ Auth::user()->name }}
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<a class="dropdown-item" href="{{ action('MyProfileController@index')}}">Profile</a>
+						<a class="dropdown-item" href="{{ route('profile.index')}}">Profile</a>
 						<div class="dropdown-divider"></div>
 							<form id="frm-logout" action="{{ route('logout') }}" method="POST">
 								{{ csrf_field() }}

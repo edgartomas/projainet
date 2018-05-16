@@ -55,14 +55,14 @@
 						</td>
 						<td>
 							@if($account->trashed())
-							<form method="post" action="{{ action('AccountController@reopen', $account)}}">
+							<form class="form-inline" method="post" action="{{ route('accounts.reopen', $account)}}">
 								@csrf
 								@method('patch')
 								<button type="submit" class="btn btn-primary">Open</button>
 							</form>
 							@else
 								<a class="btn btn-primary" href="#" role="button">View Movements</a>
-								<form method="post" action="{{ action('AccountController@close', $account)}}">
+								<form class="form-inline" method="post" action="{{ route('accounts.close', $account)}}" style="display: inline;">
 								@csrf
 								@method('patch')
 									<button type="submit" class="btn btn-primary">Close</button>

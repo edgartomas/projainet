@@ -33,7 +33,7 @@
 				<div class="card-header">
 					Filter
 				</div>
-				<form action="{{ action('UserController@index') }}" method="GET" id="filterForm">
+				<form action="{{ route('users.index') }}" method="GET" id="filterForm">
 					<ul class="list-group list-group-flush">
 						<li class="list-group-item">
 							<h6 class="card-subtitle mb-2 text-muted">Name</h6>
@@ -106,13 +106,13 @@
 						<td>
 						@if($user != Auth::user())
 							@if($user->admin == 0)
-								<form method="post" class="from-inline" action="{{ action('UserController@promote', $user->id) }}" style="display:inline;">
+								<form method="post" class="from-inline" action="{{ route('user.promote', $user->id) }}" style="display:inline;">
 								@csrf
 								@method('patch')
 									<button type="submit" class="btn btn-primary btn-sm">Promote</button>
 								</form> 
 							@else
-								<form method="post" class="from-inline" action="{{ action('UserController@demote', $user->id) }}" style="display:inline;">
+								<form method="post" class="from-inline" action="{{ route('user.demote', $user->id) }}" style="display:inline;">
 								@csrf
 								@method('patch')
 									<button type="submit" class="btn btn-primary btn-sm">Demote</button>
@@ -120,16 +120,16 @@
 							@endif
 
 							@if($user->blocked == 0)
-								<form method="post" class="form-inline" action="{{ action('UserController@block', $user->id) }}" style="display:inline;">
+								<form method="post" class="form-inline" action="{{ route('user.block', $user->id) }}" style="display:inline;">
 								@csrf
 								@method('patch')
 									<button type="submit" class="btn btn-info btn-sm">Block</button>
 								</form> 
 							@else
-								<form method="post" class="form-inline" action="{{ action('UserController@unblock', $user->id) }}" style="display:inline;">
+								<form method="post" class="form-inline" action="{{ route('user.unblock', $user->id) }}" style="display:inline;">
 									@csrf
 									@method('patch')
-									<button type="submit" class="btn btn-info btn-sm">unblock</button>
+									<button type="submit" class="btn btn-info btn-sm">Unblock</button>
 								</form> 
 							@endif
 						@endif

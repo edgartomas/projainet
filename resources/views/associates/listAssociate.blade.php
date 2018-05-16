@@ -51,15 +51,12 @@
 						<td>
 						@isset($user->profile_photo)	
 							<img class="rounded" src="{{ asset('storage/profiles/' . $user->profile_photo )}}" style ="width:40px; height:40px; float:left; border-radius: 50%;">
-						@endisset
-						@empty($user->profile_photo)
-							<img class="rounded" src="{{ asset('storage/profiles/default.jpg') }}" style ="width:40px; height:40px; float:left; border-radius: 50%;">
-						@endempty	
+						@endisset	
 						</td>
 						<td>{{ $user->name }}</td>
 						<td>{{ $user->email }}</td>
 						<td>
-							<form method="post" action="{{ action('AssociatesController@destroy', $user->id) }}">
+							<form method="post" action="{{ route('desassociate.user', $user->id) }}">
 								@csrf
 								@method('delete')
 								<button type="submit" class="btn btn-danger" href="">Desassociate</a>

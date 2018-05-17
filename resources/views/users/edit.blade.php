@@ -3,7 +3,7 @@
 
 
 
-<form action = "{{route('accounts.update', $account )}}" method="post" class="form-group">
+<form action = "{{route('accounts.edit', $account )}}" method="post" class="form-group">
     @csrf
     @method('put')
 
@@ -11,10 +11,17 @@
    
     <div class="form-group" style="margin-left: 20px">
         <label for="inputPasswordConfirmation">Type</label>
-        <input
-            type=text" class="form-control"
-            name="account_type_id" id="inputPasswordConfirmation"
-            value="{{ $account->accountType->name }}"/>
+        
+            <select name="type" id="inputType" class="form-control">
+           
+            <option {{ old('type', $account->account_type_id) == '1' ? 'selected' : ''}} value="1">Bank Account</option>
+            <option {{ old('type', $account->account_type_id) == '2' ? 'selected' : ''}} value="2">Pocket Money</option>
+            <option {{ old('type',  $account->account_type_id) == '3' ? 'selected' : ''}} value="3">PayPal Account</option>
+            <option {{ old('type',  $account->account_type_id) == '4' ? 'selected' : ''}} value="4">Credit Card</option>
+            <option {{ old('type',  $account->account_type_id) == '5' ? 'selected' : ''}} value="5">Meal Card</option>
+        </select>
+ 
+</select>
     </div>
     <div class="form-group" style="margin-left: 20px">
         <label for="inputPasswordConfirmation">Code</label>

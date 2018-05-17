@@ -15,14 +15,21 @@ class MovementController extends Controller
         $this->middleware('auth');
     }
 
-    public function indexMovements()
+    public function indexMovements($account)
     {
 
-    		$user =Auth::user();
-         $movements = Movement::all();
+    		
+         $movements = Movement::where('account_id', '=' , $account)->get();
+
             $title = 'List of Moviments';
 
-            return view('home', compact('title', 'movements'));
+            return view('users.listmovements', compact('title', 'movements'));
         
+    }
+
+     public function Edit(Account $account)
+    {
+       
+        return view('users.listmovements', compact ('account_id'));
     }
 }

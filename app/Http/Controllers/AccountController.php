@@ -27,18 +27,20 @@ class AccountController extends Controller
 
             $title = 'List of Moviments';
 
-            return view('home', compact('title', 'accounts', 'movements'));       
+            return view('home', compact('title', 'accounts'));       
     }
 
 
-    public function Edit(Account $account)
+    public function Edit( $account)
     {
+        //$account = Account::findOrFail($account);
        
         return view('users.edit', compact ('account'));
     }
 
-    public function update( Request $request, Account $account )
+    public function update( Request $request, $account )
     {
+        $account = Account::findOrFail($account);
 
         $except = [''];
         $account->fill($request->except($except));
@@ -52,14 +54,5 @@ class AccountController extends Controller
         return redirect()
         ->route('home');
     }
-    /* public function UserAccount($owner_id)
-    {
-        
-        $account = Account::find($owner_id);
-        $title = 'List users';
-
-
-        return view('home', compact('title', 'account'));  // temos que passar o titulo , não esquecer
     
-    }*/
 }

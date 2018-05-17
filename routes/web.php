@@ -50,9 +50,13 @@ Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.
 
 
 
-Route::get('/home/{account}/edit', 'AccountController@edit')->name('accounts.edit');
+Route::put('/account/{account}', 'AccountController@update')->name('accounts.update');
 
-Route::put('/home/{user}/edit', 'AccountController@update')->name('accounts.update');
+Route::get('/account/{account}', 'AccountController@edit')->name('accounts.edit');
+//Route::put('/home/{user}/edit', 'AccountController@update')->name('accounts.update');
+
+// 
+Route::get('/home/movements/{accounts}', 'MovementController@indexMovements')->name('movements.list');
 
 Auth::routes();
 

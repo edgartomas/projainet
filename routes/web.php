@@ -55,6 +55,12 @@ Route::delete('me/associates/{user}', 'AssociatesController@destroy')->name('des
 //Rota dashboard do user (Acessivel a logados)
 Route::get('/home', 'AccountController@index')->name('home');
 
+//Rota vista criação conta
+Route::get('/account', 'AccountController@create')->name('account.create');
+
+//Rota criar conta
+Route::post('/account', 'AccountController@store')->name('account.store');
+
 Route::get('/accounts/{user}', 'AccountController@all')->name('accounts.index');
 
 Route::get('/accounts/{user}/opened', 'AccountController@opened')->name('accounts.opened');

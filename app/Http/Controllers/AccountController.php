@@ -30,6 +30,28 @@ class AccountController extends Controller
             return view('home', compact('title', 'accounts', 'movements'));       
     }
 
+    public function create(){
+        $title = 'Account creation';
+        return view('account.create', compact('title'));
+    }
+
+    public function store($request){
+
+        $account = $request->validate([
+            'account_type_id' => 'required',
+            'date' => 'required',
+            'code' => 'required|string',
+            'description' => 'required',
+            'start_balance' => 'required',
+        ]);
+
+        $account->update(['owner_id' => Auth::user()]);
+
+        Account::create($account);
+
+        return view('home')->with('status', 'Account created');
+    }
+
 
     public function Edit(Account $account)
     {
@@ -101,19 +123,17 @@ class AccountController extends Controller
 
     public function destroy($account){
 
+        $account = Account::findOrFail($account);
+
         if(Auth::user()->can('do-operation', $account->owner_id)){
             return back()->withErrors("You can't remove this account");
         }
 
-        if(!isset($account->last_movement_date) || !$account->trashed()){
+        if(!isset($account->last_movement_date)){
             return back()->withErrors('Account cannot be removed.');
         }
 
-        if(isset($account->last_movement_data)){
-            //$account->movements->
-        }
-
-        Account::detroy($account);
+        $account->forceDelete();
 
         return back()->with('status', 'Account removed.');
     }

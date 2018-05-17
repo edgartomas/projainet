@@ -30,6 +30,28 @@ class AccountController extends Controller
             return view('home', compact('title', 'accounts'));       
     }
 
+    public function create(){
+        $title = 'Account creation';
+        return view('account.create', compact('title'));
+    }
+
+    public function store($request){
+
+        $account = $request->validate([
+            'account_type_id' => 'required',
+            'date' => 'required',
+            'code' => 'required|string',
+            'description' => 'required',
+            'start_balance' => 'required',
+        ]);
+
+        $account->update(['owner_id' => Auth::user()]);
+
+        Account::create($account);
+
+        return view('home')->with('status', 'Account created');
+    }
+
 
     public function Edit( $account)
     {
@@ -55,4 +77,61 @@ class AccountController extends Controller
         ->route('home');
     }
     
+<<<<<<< HEAD
+=======
+    }*/
+
+    public function all($user){
+        $accounts = Account::withTrashed()->where('owner_id', '=', $user)->paginate(10);
+        $title = 'List of open accounts';
+        return view('accounts.list', compact('title','accounts'));
+    }
+
+    public function opened($user){
+        $accounts = Account::where('owner_id', '=', $user)->paginate(10);
+        $title = 'List of open accounts';
+        return view('accounts.list', compact('title','accounts'));
+    }
+
+    public function closed($user){
+        $accounts = Account::onlyTrashed()->where('owner_id', '=', $user)->paginate(10);
+        $title = 'List of open accounts';
+        return view('accounts.list', compact('title','accounts'));
+    }
+
+    public function close($account){
+        $account = Account::withTrashed()->findOrFail($account);
+        if(Auth::user()->can('do-operation', $account->owner_id)){
+            return back()->withErrors("You can't close this account");
+        }
+        $account->delete();
+        return back()->with('status', 'Account closed.');
+    }
+
+    public function reopen($account){
+        $account = Account::withTrashed()->findOrFail($account);
+        if(Auth::user()->can('do-operation', $account->owner_id)){
+            return back()->withErrors("You can't re-open this account");
+        }
+        $account->restore();
+        return back()->with('status', 'Account re-opened.');
+    }
+
+    public function destroy($account){
+
+        $account = Account::findOrFail($account);
+
+        if(Auth::user()->can('do-operation', $account->owner_id)){
+            return back()->withErrors("You can't remove this account");
+        }
+
+        if(!isset($account->last_movement_date)){
+            return back()->withErrors('Account cannot be removed.');
+        }
+
+        $account->forceDelete();
+
+        return back()->with('status', 'Account removed.');
+    }
+>>>>>>> 353967acb21be7a5788399080f82bf320af44a8c
 }

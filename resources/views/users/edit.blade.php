@@ -6,9 +6,6 @@
 <form action = "{{route('accounts.edit', $account )}}" method="post" class="form-group">
     @csrf
     @method('put')
-
-   
-   
     <div class="form-group" style="margin-left: 20px">
         <label for="inputPasswordConfirmation">Type</label>
         

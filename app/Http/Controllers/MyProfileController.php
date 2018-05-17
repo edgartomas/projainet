@@ -27,7 +27,7 @@ class MyProfileController extends Controller
 
         $user = $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'nullable|string'
+            'phone' => 'nullable|string|regex:/(\+351)\s[0-9]{3}\s[0-9]{3}\s[0-9]{3}|[0-9]{3}\s[0-9]{3}\s[0-9]{3}|(\+351)\s[0-9]{9}|[0-9]{9}/'
         ]);
 
         if($request['email'] != Auth::user()->email){
@@ -66,7 +66,7 @@ class MyProfileController extends Controller
         }
 
         $user = $request->validate([
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:3|confirmed',
         ]);
 
         $user['password'] = Hash::make($user['password']);

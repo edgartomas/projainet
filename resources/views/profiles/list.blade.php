@@ -37,7 +37,7 @@ $associatesOf = Auth::user()->associateOf
 				<div class="card-header">
 					Filter
 				</div>
-				<form action="{{ action('ProfileController@index') }}" method="GET" id="filterForm">
+				<form action="{{ route('users.profiles') }}" method="GET" id="filterForm">
 					<ul class="list-group list-group-flush">
 						<li class="list-group-item">
 							<h6 class="card-subtitle mb-2 text-muted">Name</h6>
@@ -73,10 +73,7 @@ $associatesOf = Auth::user()->associateOf
 						<td>
 						@isset($user->profile_photo)
 							<img class="img-fluid rounded" src="{{ asset('storage/profiles/' . $user->profile_photo )}}" style ="width:40px; height:40px; float:left; border-radius: 50%;">
-						@endisset
-						@empty($user->profile_photo)
-							<img class="img-fluid rounded" src="{{ asset('storage/profiles/default.jpg') }}" style ="width:40px; height:40px; float:left; border-radius: 50%;">
-						@endempty	
+						@endisset	
 						</td>
 						<td>{{ $user->name }}</td>
 						<td>
@@ -91,13 +88,13 @@ $associatesOf = Auth::user()->associateOf
 						</td>
 						<td>
 							@if($associates->contains($user))
-								<form method="post" action="{{ action('AssociatesController@destroy', $user->id) }}">
+								<form method="post" action="{{ route('desassociate.user', $user->id) }}">
 									@csrf
 									@method('delete')
 									<button type="submit" class="btn btn-danger" href="">Desassociate</a>
 								</form>
 							@else
-								<form method="post" action="{{ action('AssociatesController@create') }}">
+								<form method="post" action="{{ route('associate.user') }}">
 									@csrf
 									<input type="text" class="form-control" name="associated_user" style="display: none;" value="{{ $user->id }}">
 									<button type="submit" class="btn btn-primary">Associate</button>

@@ -19,7 +19,7 @@ class MovementController extends Controller
     {
 
     		
-         $movements = Movement::where('account_id', '=' , $account)->get();
+         $movements = Movement::where('account_id', '=' , $account)->orderBy('date', 'desc')->latest()->get();
 
             $title = 'List of Moviments';
 

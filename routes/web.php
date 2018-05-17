@@ -13,80 +13,102 @@
 // Rota pagina inicial (Acessivel a todos)
 Route::get('/', 'WelcomeController@index')->name('index');
 
-//Rota lista de todos os users (Acessivel Admins)
-Route::get('/users', 'UserController@index')->name('users.index');
+Route::prefix('users')->group(function(){
+    //Rota lista de todos os users (Acessivel Admins)
+    Route::get('/', 'UserController@index')->name('users.index');
 
-//Rota promove users a admins (Acessivel a Admins)
-Route::patch('/users/{user}/promote', 'UserController@promote')->name('user.promote');
+    Route::prefix('{user}')->group(function(){
+        //Rota promove users a admins (Acessivel a Admins)
+        Route::patch('/promote', 'UserController@promote')->name('user.promote');
 
-//Rota despromove users a admins (Acessivel a Admins)
-Route::patch('/users/{user}/demote', 'UserController@demote')->name('user.demote');
+        //Rota despromove users a admins (Acessivel a Admins)
+        Route::patch('/demote', 'UserController@demote')->name('user.demote');
 
-//Rota bloqueia users (Acessivel a Admins)
-Route::patch('/users/{user}/block', 'UserController@block')->name('user.block');
+        //Rota bloqueia users (Acessivel a Admins)
+        Route::patch('/block', 'UserController@block')->name('user.block');
 
-//Rota desbloqueia user (Acessivel a Admins)
-Route::patch('/users/{user}/unblock', 'UserController@unblock')->name('user.unblock');
+        //Rota desbloqueia user (Acessivel a Admins)
+        Route::patch('/unblock', 'UserController@unblock')->name('user.unblock');
+    });
+});
 
-//Rota mostra perfil utilizador (Acessivel a logados)
-Route::get('/me/profile', 'MyProfileController@index')->name('profile.index');
+Route::prefix('me')->group(function(){
 
-//Rota actualiza perfil utilizador (Acessivel a logados)
-Route::put('/me/profile', 'MyProfileController@update')->name('profile.update');
+    //Rota actualiza password utilizador (Acessivel a logados)
+    Route::patch('/password', 'UserController@updatePassword')->name('password.update');
 
-//Rota actualiza password utilizador (Acessivel a logados)
-Route::patch('/me/password', 'MyProfileController@updatePassword')->name('password.update');
+    //Rota mostra perfil utilizador (Acessivel a logados)
+    Route::get('/profile', 'UserController@edit')->name('profile.index');
+
+    //Rota actualiza perfil utilizador (Acessivel a logados)
+    Route::put('/profile', 'UserController@update')->name('profile.update');
+
+    Route::prefix('associates')->group(function(){
+        //Rota mostra lista de associados a um user (Acessivel a logados)
+        Route::get('/', 'AssociatesController@index')->name('users.associates');
+        //Rota associa um user ao user logado (Acessievl a logados)
+        Route::post('/', 'AssociatesController@create')->name('associate.user');
+        //Rota desassocia um user ao user logado (Acessievl a logados)
+        Route::delete('{user}', 'AssociatesController@destroy')->name('desassociate.user');
+    });
+
+    //Rota mostra lista a que um user está associado (Acessivel a logados)
+    Route::get('associate-of', 'AssociateOfController@index')->name('users.associatesOf');
+});
 
 //Rota mostra a lista de user a (Acessivel a logados)
 Route::get('/profiles', 'ProfileController@index')->name('users.profiles');
 
-//Rota mostra lista de associados a um user (Acessivel a logados)
-Route::get('me/associates', 'AssociatesController@index')->name('users.associates');
+Route::prefix('accounts/{user}')->group(function(){
+    Route::get('/', 'AccountController@all')->name('accounts.index');
 
-//Rota mostra lista a que um user está associado (Acessivel a logados)
-Route::get('me/associate-of', 'AssociateOfController@index')->name('users.associatesOf');
+    Route::get('/opened', 'AccountController@opened')->name('accounts.opened');
 
-//Rota associa um user ao user logado (Acessievl a logados)
-Route::post('me/associates', 'AssociatesController@create')->name('associate.user');
+    Route::get('/closed', 'AccountController@closed')->name('accounts.closed');
+});
 
-//Rota desassocia um user ao user logado (Acessievl a logados)
-Route::delete('me/associates/{user}', 'AssociatesController@destroy')->name('desassociate.user');
+Route::prefix('account')->group(function(){
+    //Rota vista criação conta
+    Route::get('/', 'AccountController@create')->name('account.create');
 
-//Rota dashboard do user (Acessivel a logados)
-Route::get('/home', 'AccountController@index')->name('home');
+    //Rota criar conta
+    Route::post('/', 'AccountController@store')->name('account.store');
 
-//Rota vista criação conta
-Route::get('/account', 'AccountController@create')->name('account.create');
+    Route::prefix('{account}')->group(function(){
+        //Rota mostrar vista edição
+        Route::get('/', 'AccountController@edit')->name('accounts.edit');
 
-//Rota criar conta
-Route::post('/account', 'AccountController@store')->name('account.store');
+        //Rota edição conta
+        Route::put('/', 'AccountController@update')->name('accounts.update');
+        
+        //Rota remover conta
+        Route::delete('/', 'AccountController@destroy')->name('accounts.destroy');
 
-Route::get('/accounts/{user}', 'AccountController@all')->name('accounts.index');
+        Route::patch('/close', 'AccountController@close')->name('accounts.close');
 
-Route::get('/accounts/{user}/opened', 'AccountController@opened')->name('accounts.opened');
+        Route::patch('/reopen', 'AccountController@reopen')->name('accounts.reopen');
+    });
+});
 
-Route::get('/accounts/{user}/closed', 'AccountController@closed')->name('accounts.closed');
+Route::prefix('movements/{account}')->group(function(){
+    Route::get('/', 'MovementController@index')->name('movements.index');
 
-Route::patch('/account/{account}/close', 'AccountController@close')->name('accounts.close');
-
-Route::patch('/account/{account}/reopen', 'AccountController@reopen')->name('accounts.reopen');
-
-
-//Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
-Route::get('/home/{movement}/movement', 'MovementController@indexMovements')->name('movements.index');
-
+});
 
 Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
 
 
 
-Route::put('/account/{account}', 'AccountController@update')->name('accounts.update');
 
-Route::get('/account/{account}', 'AccountController@edit')->name('accounts.edit');
-//Route::put('/home/{user}/edit', 'AccountController@update')->name('accounts.update');
-
-// 
 Route::get('/home/movements/{accounts}', 'MovementController@indexMovements')->name('movements.list');
+
+
+
+//Route::put('/home/{user}/edit', 'AccountController@update')->name('accounts.update');
+//Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
+
+//Rota dashboard do user (Acessivel a logados)
+Route::get('/dashboard', 'AccountController@index')->name('home');
 
 Auth::routes();
 

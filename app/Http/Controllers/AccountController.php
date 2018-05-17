@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Account;
 use App\User;
 use App\Movement;
+use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
 {
@@ -32,24 +33,35 @@ class AccountController extends Controller
 
     public function create(){
         $title = 'Account creation';
-        return view('account.create', compact('title'));
+        return view('accounts.create', compact('title'));
     }
 
-    public function store($request){
+    public function store(Request $request){
 
         $account = $request->validate([
-            'account_type_id' => 'required',
-            'date' => 'required',
-            'code' => 'required|string',
-            'description' => 'required',
-            'start_balance' => 'required',
+            'account_type_id' => 'required|exists:account_types,id',
+            'date' => 'required|date_format:d/m/Y',
+            'code' => [
+                'required',
+                'string',
+                'min:6',
+                'max:255',
+                Rule::unique('accounts')->where(function($query){
+                    return $query->where('owner_id', '<>', Auth::user());
+                }),
+            ],
+            'description' => 'nullable|string|max:255',
+            'start_balance' => 'required|numeric',
         ]);
 
-        $account->update(['owner_id' => Auth::user()]);
+        $account['date'] = date("Y-m-d", strtotime($account['date']));
+
+        $account['owner_id'] = Auth::user()->id;
+        $account['created_at'] = date("Y-m-d H:i:s");
 
         Account::create($account);
 
-        return view('home')->with('status', 'Account created');
+        return redirect()->route('accounts.opened', Auth::user())->with('status', 'Account created');
     }
 
 
@@ -82,21 +94,21 @@ class AccountController extends Controller
     
 
     public function all($user){
-        $accounts = Account::withTrashed()->where('owner_id', '=', $user)->paginate(10);
+        $accounts = Account::withTrashed()->where('owner_id', '=', $user)->with('accountType')->paginate(10);
         $title = 'List of open accounts';
-        return view('accounts.list', compact('title','accounts'));
+        return view('accounts.all', compact('title','accounts'));
     }
 
     public function opened($user){
-        $accounts = Account::where('owner_id', '=', $user)->paginate(10);
+        $accounts = Account::where('owner_id', '=', $user)->with('accountType')->paginate(10);
         $title = 'List of open accounts';
-        return view('accounts.list', compact('title','accounts'));
+        return view('accounts.open', compact('title','accounts'));
     }
 
     public function closed($user){
-        $accounts = Account::onlyTrashed()->where('owner_id', '=', $user)->paginate(10);
+        $accounts = Account::onlyTrashed()->where('owner_id', '=', $user)->with('accountType')->paginate(10);
         $title = 'List of open accounts';
-        return view('accounts.list', compact('title','accounts'));
+        return view('accounts.close', compact('title','accounts'));
     }
 
     public function close($account){
@@ -119,13 +131,13 @@ class AccountController extends Controller
 
     public function destroy($account){
 
-        $account = Account::findOrFail($account);
+        $account = Account::withTrashed()->findOrFail($account);
 
         if(Auth::user()->can('do-operation', $account->owner_id)){
             return back()->withErrors("You can't remove this account");
         }
 
-        if(!isset($account->last_movement_date)){
+        if(isset($account->last_movement_date)){
             return back()->withErrors('Account cannot be removed.');
         }
 

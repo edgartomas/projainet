@@ -13,7 +13,7 @@ class Account extends Model
     public $timestamps = false;
 
    protected $fillable = [
-         'account_type_id', 'current_balance', 'start_balance' , 'description', 'deleted_at' , 'created_at'
+         'account_type_id', 'current_balance', 'start_balance' , 'description', 'deleted_at' , 'created_at', 'owner_id', 'date', 'code'
     ];
 
     protected $hidden = [

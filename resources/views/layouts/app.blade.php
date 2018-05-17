@@ -18,15 +18,8 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{{ route('home') }}">Home</a>
 				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Accounts
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					<a class="dropdown-item" href="{{ route('accounts.index', Auth::user()) }}">All</a>
-					<a class="dropdown-item" href="{{ route('accounts.opened', Auth::user()) }}">Open</a>
-					<a class="dropdown-item" href="{{ route('accounts.closed', Auth::user()) }}">Closed</a>
-					</div>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ route('accounts.opened', Auth::user()) }}">Accounts</a>
 				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

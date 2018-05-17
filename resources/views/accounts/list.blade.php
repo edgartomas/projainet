@@ -28,6 +28,13 @@
 	</div>
 	<br>
 	<div class="row">
+		<div class="col text-right">
+			<a class="btn btn-primary" href="{{ route('account.create') }}" role="button">Create new account</a>
+			@yield('buttons')
+		</div>
+	</div>
+	<br>
+	<div class="row">
 		<div class="col">
 		@if(count($accounts) == 0)
 			<h4>No accounts found</h4>
@@ -55,7 +62,7 @@
 						</td>
 						<td>
 							@if($account->trashed())
-							<form class="form-inline" method="post" action="{{ route('accounts.reopen', $account)}}">
+							<form class="form-inline" method="post" action="{{ route('accounts.reopen', $account)}}" style="display: inline;">
 								@csrf
 								@method('patch')
 								<button type="submit" class="btn btn-primary">Open</button>
@@ -68,6 +75,13 @@
 									<button type="submit" class="btn btn-primary">Close</button>
 								</form>
 							@endif
+							@empty($account->last_movement_date)
+								<form class="form-inline" method="post" action="{{ route('accounts.destroy', $account)}}" style="display: inline;">
+								@csrf
+								@method('delete')
+									<button type="submit" class="btn btn-danger">Remove</button>
+								</form>
+							@endempty
 						</td>
 					</tr>
 					@endforeach
@@ -80,4 +94,4 @@
 		</div>
 	</div>
 </div>
-@endsection('content') 
+@endsection('content')

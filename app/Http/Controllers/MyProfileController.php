@@ -66,7 +66,7 @@ class MyProfileController extends Controller
         }
 
         $user = $request->validate([
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:3|confirmed',
         ]);
 
         $user['password'] = Hash::make($user['password']);

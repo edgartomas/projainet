@@ -29,50 +29,55 @@
 	<br>
 	<div class="row">
 		<div class="col">
-		@if(count($users) == 0)
-			<h4>No users found</h4>
+		@if(count($accounts) == 0)
+			<h4>No accounts found</h4>
 		@else
 			<table class="table">
 				<thead> 
-				<tr> 
-					<th>#</th>
+				<tr>
 					<th>
-						Name
+						Code
 					</th>
-					<th>
-						Name
-					</th>
-					<th>Operation</th>
+                    <th>Type</th>
+                    <th>Balance</th>
+					<th></th>
 				</tr> 
 				</thead>
 				<tbody>
-					@foreach ($users as $user)
+					@foreach ($accounts as $account)
 					<tr>
 						<td>
-						@isset($user->profile_photo)	
-							<img class="rounded" src="{{ asset('storage/profiles/' . $user->profile_photo )}}" style ="width:40px; height:40px; float:left; border-radius: 50%;">
-						@endisset	
+                            {{ $account->code}}
 						</td>
-						<td>{{ $user->name }}</td>
-						<td>{{ $user->email }}</td>
+						<td>{{ $account->accountType->name }}</td>
 						<td>
-							<form method="post" action="{{ route('desassociate.user', $user->id) }}">
+							{{ $account->current_balance }}
+						</td>
+						<td>
+							@if($account->trashed())
+							<form class="form-inline" method="post" action="{{ route('accounts.reopen', $account)}}">
 								@csrf
-								@method('delete')
-								<button type="submit" class="btn btn-danger" href="">Desassociate</a>
+								@method('patch')
+								<button type="submit" class="btn btn-primary">Open</button>
 							</form>
+							@else
+								<a class="btn btn-primary" href="#" role="button">View Movements</a>
+								<form class="form-inline" method="post" action="{{ route('accounts.close', $account)}}" style="display: inline;">
+								@csrf
+								@method('patch')
+									<button type="submit" class="btn btn-primary">Close</button>
+								</form>
+							@endif
 						</td>
 					</tr>
 					@endforeach
 				</tbody>
 			</table>
 			<div class="d-flex justify-content-center">
-				{{$users->appends($_GET)->links()}}
+				{{ $accounts->links()}}
 			</div>
 			@endif
 		</div>
 	</div>
 </div>
-
-
 @endsection('content') 

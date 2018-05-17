@@ -62,4 +62,59 @@ class AccountController extends Controller
         return view('home', compact('title', 'account'));  // temos que passar o titulo , não esquecer
     
     }*/
+
+    public function all($user){
+        $accounts = Account::withTrashed()->where('owner_id', '=', $user)->paginate(10);
+        $title = 'List of open accounts';
+        return view('accounts.list', compact('title','accounts'));
+    }
+
+    public function opened($user){
+        $accounts = Account::where('owner_id', '=', $user)->paginate(10);
+        $title = 'List of open accounts';
+        return view('accounts.list', compact('title','accounts'));
+    }
+
+    public function closed($user){
+        $accounts = Account::onlyTrashed()->where('owner_id', '=', $user)->paginate(10);
+        $title = 'List of open accounts';
+        return view('accounts.list', compact('title','accounts'));
+    }
+
+    public function close($account){
+        $account = Account::withTrashed()->findOrFail($account);
+        if(Auth::user()->can('do-operation', $account->owner_id)){
+            return back()->withErrors("You can't close this account");
+        }
+        $account->delete();
+        return back()->with('status', 'Account closed.');
+    }
+
+    public function reopen($account){
+        $account = Account::withTrashed()->findOrFail($account);
+        if(Auth::user()->can('do-operation', $account->owner_id)){
+            return back()->withErrors("You can't re-open this account");
+        }
+        $account->restore();
+        return back()->with('status', 'Account re-opened.');
+    }
+
+    public function destroy($account){
+
+        if(Auth::user()->can('do-operation', $account->owner_id)){
+            return back()->withErrors("You can't remove this account");
+        }
+
+        if(!isset($account->last_movement_date) || !$account->trashed()){
+            return back()->withErrors('Account cannot be removed.');
+        }
+
+        if(isset($account->last_movement_data)){
+            //$account->movements->
+        }
+
+        Account::detroy($account);
+
+        return back()->with('status', 'Account removed.');
+    }
 }

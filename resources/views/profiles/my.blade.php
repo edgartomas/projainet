@@ -38,7 +38,7 @@
         </div>
         <div class="col">
         <h5 class="text-center my-4">Update Profile</h5>
-            <form method="post" action="{{ action('MyProfileController@update') }}" enctype="multipart/form-data">
+            <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                 @csrf
                 @method('put')
                 <div class="form-group row">
@@ -71,7 +71,7 @@
             </form>
             <hr class="my-4">
             <h5 class="text-center my-4">Update Password</h5>
-            <form method="POST" action="{{ action('MyProfileController@updatePassword') }}">
+            <form method="POST" action="{{ route('password.update') }}">
                 @csrf
                 @method('patch')
                 <div class="form-group row">

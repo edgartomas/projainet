@@ -53,8 +53,13 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+<<<<<<< HEAD
             'password' => 'required|string|min:6|confirmed',
             'phone' => 'nullable|regex:/(\+351)\s[0-9]{3}\s[0-9]{3}\s[0-9]{3}|[0-9]{3}\s[0-9]{3}\s[0-9]{3}|(\+351)\s[0-9]{9}|[0-9]{9}/',
+=======
+            'password' => 'required|string|min:3|confirmed',
+            //'phone' => 'nullable|regex para aceitar + e rejeitar nums',
+>>>>>>> 06da34473a43c858dcbc53e759d1bd2bbd497f4f
             'profile_photo' => 'nullable|image'
         ]);
     }
@@ -80,6 +85,8 @@ class RegisterController extends Controller
             $filepath = Storage::putFile('public/profiles', request()->file('profile_photo'));
 
             $filename = basename($filepath);
+        } else {
+            $filename = null;
         }
 
         $user->update(['profile_photo' => $filename]);

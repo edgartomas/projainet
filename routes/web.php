@@ -91,7 +91,7 @@ Route::prefix('account')->group(function(){
 });
 
 Route::prefix('movements/{account}')->group(function(){
-    Route::get('/', 'MovementController@index')->name('movements.index');
+    Route::get('/', 'MovementController@indexMovements')->name('movements.list');
 
 });
 
@@ -100,10 +100,10 @@ Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.
 
 
 
-Route::get('/home/movements/{accounts}', 'MovementController@indexMovements')->name('movements.list');
 
 
 
+//Route::get('/', 'MovementController@index')->name('movements.index');
 //Route::put('/home/{user}/edit', 'AccountController@update')->name('accounts.update');
 //Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
 

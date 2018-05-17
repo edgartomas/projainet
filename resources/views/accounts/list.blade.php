@@ -68,7 +68,8 @@
 								<button type="submit" class="btn btn-primary">Open</button>
 							</form>
 							@else
-								<a class="btn btn-primary" href="#" role="button">View Movements</a>
+								<a class="btn btn-primary" href="{{ route('movements.list', $account )}}" role="button">View Movements</a>
+								<a class="btn btn-primary" href="{{ route('accounts.edit', $account )}}" role="button">Edit</a>
 								<form class="form-inline" method="post" action="{{ route('accounts.close', $account)}}" style="display: inline;">
 								@csrf
 								@method('patch')

@@ -44,7 +44,7 @@
     </div>
     <div class="form-group" >
         <button type="submit" class="btn btn-success" name="ok">Edit</button>
-        <a  class="btn btn-default"  href="{{ route('users.index')}}" name="cancel">Cancel</button>
+        <a  class="btn btn-default"  href="{{ URL::previous() }}" name="cancel">Cancel</button>
     </div>
 </form>
 

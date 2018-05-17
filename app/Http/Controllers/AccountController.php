@@ -55,7 +55,7 @@ class AccountController extends Controller
 
     public function Edit( $account)
     {
-        //$account = Account::findOrFail($account);
+        $account = Account::findOrFail($account);
        
         return view('users.edit', compact ('account'));
     }
@@ -77,9 +77,9 @@ class AccountController extends Controller
         ->route('home');
     }
     
-<<<<<<< HEAD
-=======
-    }*/
+
+
+    
 
     public function all($user){
         $accounts = Account::withTrashed()->where('owner_id', '=', $user)->paginate(10);
@@ -133,5 +133,5 @@ class AccountController extends Controller
 
         return back()->with('status', 'Account removed.');
     }
->>>>>>> 353967acb21be7a5788399080f82bf320af44a8c
+
 }

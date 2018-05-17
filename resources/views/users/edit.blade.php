@@ -11,11 +11,11 @@
         
             <select name="type" id="inputType" class="form-control">
            
-            <option {{ old('type', $account->account_type_id) == '1' ? 'selected' : ''}} value="1">Bank Account</option>
-            <option {{ old('type', $account->account_type_id) == '2' ? 'selected' : ''}} value="2">Pocket Money</option>
-            <option {{ old('type',  $account->account_type_id) == '3' ? 'selected' : ''}} value="3">PayPal Account</option>
-            <option {{ old('type',  $account->account_type_id) == '4' ? 'selected' : ''}} value="4">Credit Card</option>
-            <option {{ old('type',  $account->account_type_id) == '5' ? 'selected' : ''}} value="5">Meal Card</option>
+            <option {{old('type', $account->account_type_id) == '1' ? 'selected' : ''}} value="1">Bank Account</option>
+            <option {{old('type', $account->account_type_id) == '2' ? 'selected' : ''}} value="2">Pocket Money</option>
+            <option {{old('type',$account->account_type_id) == '3' ? 'selected' : ''}} value="3">PayPal Account</option>
+            <option {{old('type',  $account->account_type_id) == '4' ? 'selected' : ''}} value="4">Credit Card</option>
+            <option {{old('type',  $account->account_type_id) == '5' ? 'selected' : ''}} value="5">Meal Card</option>
         </select>
  
 </select>

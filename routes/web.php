@@ -60,7 +60,7 @@ Route::prefix('me')->group(function(){
 Route::get('/profiles', 'ProfileController@index')->name('users.profiles');
 
 Route::prefix('accounts/{user}')->group(function(){
-    Route::get('/', 'AccountController@all')->name('accounts.index');
+    Route::get('/', 'AccountController@index')->name('accounts.index');
 
     Route::get('/opened', 'AccountController@opened')->name('accounts.opened');
 
@@ -91,7 +91,7 @@ Route::prefix('account')->group(function(){
 });
 
 Route::prefix('movements/{account}')->group(function(){
-    Route::get('/', 'MovementController@indexMovements')->name('movements.list');
+    Route::get('/', 'MovementController@index')->name('movements.list');
 
 });
 
@@ -108,7 +108,7 @@ Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.
 //Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
 
 //Rota dashboard do user (Acessivel a logados)
-Route::get('/dashboard', 'AccountController@index')->name('home');
+Route::get('/dashboard', 'DashboardController@index')->name('home');
 
 Auth::routes();
 

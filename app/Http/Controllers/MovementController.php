@@ -15,15 +15,15 @@ class MovementController extends Controller
         $this->middleware('auth');
     }
 
-    public function indexMovements($account)
+    public function index($account)
     {
 
     		
-         $movements = Movement::where('account_id', '=' , $account)->orderBy('date', 'desc')->latest()->get();
+        $movements = Movement::where('account_id', '=' , $account)->orderBy('date', 'desc')->latest()->with('movementCategory')->paginate(10);
 
-            $title = 'List of Moviments';
+        $title = 'List of Moviments';
 
-            return view('users.listmovements', compact('title', 'movements'));
+        return view('movements.list', compact('title', 'movements'));
         
     }
 

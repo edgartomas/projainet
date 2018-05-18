@@ -29,4 +29,8 @@ class Account extends Model
         return $this->belongsTo('App\AccountType');
     }
 
+    public function movements(){
+        return $this->hasMany('App\Movement');
+    }
+
 }

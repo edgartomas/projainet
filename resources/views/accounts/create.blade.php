@@ -29,29 +29,29 @@
                 </div>
                 <div class="form-group row">
                     <label>Code</label>
-                    <input type="text" class="form-control" name="code">
+                    <input type="text" class="form-control" name="code" value="{{ old('code') }}">
                 </div>
                 <div class="form-group row">
                     <label>Date</label>
-                    <input type="date" class="form-control" name="date">
+                    <input type="text" class="form-control" name="date" value="{{ old('date') }}">
                 </div>
                 <div class="form-group row">
                     <label>Account Type</label>
                     <select class="form-control" name="account_type_id">
-                        <option value="1">Bank Account</option>
-                        <option value="2">Pocket Money</option>
-                        <option value="3">PayPal Account</option>
-                        <option value="4">Credit Card</option>
-                        <option value="5">Meal Card</option>
+                        <option {{ old('account_type_id') == '1' ? 'selected' : '' }} value="1">Bank Account</option>
+                        <option {{ old('account_type_id') == '2' ? 'selected' : '' }} value="2">Pocket Money</option>
+                        <option {{ old('account_type_id') == '3' ? 'selected' : '' }} value="3">PayPal Account</option>
+                        <option {{ old('account_type_id') == '4' ? 'selected' : '' }} value="4">Credit Card</option>
+                        <option {{ old('account_type_id') == '5' ? 'selected' : '' }} value="5">Meal Card</option>
                     </select>
                 </div>
                 <div class="form-group row">
                     <label>Start Balance</label>
-                    <input type="text" class="form-control" name="start_balance">
+                    <input type="text" class="form-control" name="start_balance" value="{{ old('start_balance') }}">
                 </div>
                 <div class="form-group row">
                     <label>Description</label>
-                    <input type="text" class="form-control" name="description">
+                    <input type="text" class="form-control" name="description" value="{{ old('description') }}">
                 </div>
                 <div class="form-group row ">
                     <button type="submit" class="btn btn-primary">Submit</button>

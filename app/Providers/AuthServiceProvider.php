@@ -30,5 +30,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('do-operation', function($auth, $user_id){
             return $auth->id != $user_id;
         });
+
+        Gate::define('edit-account', function($auth, $owner_id){
+            return $auth->id == $owner_id;
+        });
     }
 }

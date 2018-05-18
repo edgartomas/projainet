@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Auth;
 
 class IsAdmin
 {
@@ -19,6 +20,6 @@ class IsAdmin
             return $next($request);
         }
         
-        return redirect('/home');
+        return redirect()->route('home');
     }
 }

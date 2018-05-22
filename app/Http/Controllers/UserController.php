@@ -135,7 +135,7 @@ class UserController extends Controller
 
         $user = $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'nullable|string|regex:/(\+351)\s[0-9]{3}\s[0-9]{3}\s[0-9]{3}|[0-9]{3}\s[0-9]{3}\s[0-9]{3}|(\+351)\s[0-9]{9}|[0-9]{9}/'
+            'phone' => 'nullable|string|regex:/^[0-9 +\s]+$/'
         ]);
 
         if($request['email'] != Auth::user()->email){

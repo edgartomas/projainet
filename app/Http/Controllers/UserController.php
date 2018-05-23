@@ -128,7 +128,7 @@ class UserController extends Controller
 
         $rules = [
             'name' => 'required|string|max:255|regex:/^[a-zA-Z .]+$/',
-            'phone' => 'nullable',
+            'phone' => 'nullable|string|regex:/^[0-9 +\s]+$/',
             'profile_photo' => 'image'
         ];
 

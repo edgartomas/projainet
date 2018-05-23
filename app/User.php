@@ -27,6 +27,13 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function isAssociate($user_id){
+    
+        $user = User::findOrFail($user_id);
+
+        return $this->associate->contains($user);
+    }
+
     public function adminToString(){
         return $this->admin == 1 ? 'Admin.' : 'Normal';
     }

@@ -78,12 +78,12 @@ $associatesOf = Auth::user()->associateOf
 						<td>{{ $user->name }}</td>
 						<td>
 							@if($associates->contains($user))
-								<span class="badge badge-pill badge-success">Associate</span>
+								<span>associate</span>
 							@endif
 						</td>
 						<td>
 							@if($associatesOf->contains($user))
-								<span class="badge badge-pill badge-success">Associate-Of</span>
+								<span>associate-of</span>
 							@endif
 						</td>
 						<td>

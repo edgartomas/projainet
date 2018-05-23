@@ -32,9 +32,6 @@
             @isset(Auth::user()->profile_photo)
                 <img class="img-fluid rounded my-4" src="{{ asset('storage/profiles/' . Auth::user()->profile_photo )}}">
             @endisset
-            @empty(Auth::user()->profile_photo)
-                <img class="img-fluid rounded my-4" src="{{ asset('storage/profiles/default.jpg') }}">
-            @endempty
         </div>
         <div class="col">
         <h5 class="text-center my-4">Update Profile</h5>
@@ -75,9 +72,9 @@
                 @csrf
                 @method('patch')
                 <div class="form-group row">
-                    <label for="current_password" class="col-sm-3 col-form-label">Current Password</label>
+                    <label for="old_password" class="col-sm-3 col-form-label">Old Password</label>
                     <div class="col-sm-9">
-                        <input type="password" class="form-control" id="current_password" name="current_password">
+                        <input type="password" class="form-control" id="old_password" name="old_password">
                     </div>
                 </div>
                 <div class="form-group row">

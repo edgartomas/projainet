@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Auth;
+use \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class IsAdmin
 {
@@ -19,7 +20,6 @@ class IsAdmin
         if($request->user() && $request->user()->admin == 1){
             return $next($request);
         }
-        
-        return redirect()->route('home');
+        throw new AccessDeniedHttpException('Unauthorized.');
     }
 }

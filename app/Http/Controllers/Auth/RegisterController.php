@@ -29,7 +29,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/dashboard';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -51,10 +51,10 @@ class RegisterController extends Controller
     {
 
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z .]+$/',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'phone' => 'nullable|string|regex:/^[0-9 +\s]+$/',
+            'password' => 'required|string|min:3|confirmed',
+            'phone' => 'nullable|regex:/^[0-9 +\s]+$/',
             'profile_photo' => 'nullable|image'
         ]);
     }
@@ -77,7 +77,7 @@ class RegisterController extends Controller
 
         if(request()->hasfile('profile_photo') && request()->file('profile_photo')->isValid()){
 
-            $filepath = Storage::putFile('public/profiles', request()->file('profile_photo'));
+            $filepath = request()->file('profile_photo')->store('profiles', 'public');
 
             $filename = basename($filepath);
         } else {

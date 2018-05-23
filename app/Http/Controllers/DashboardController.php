@@ -4,15 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Account;
+use App\User;
 
 class DashboardController extends Controller
 {
-    public function index(){   
-        $accounts = Account::all();
+    public function index($user){
 
+        $user = User::findOrFail($user);
 
-        $title = 'List of Moviments';
+       
+            $accounts = Account::all();
 
-        return view('home', compact('title', 'accounts'));
+            $title = 'List of Moviments';
+    
+            return view('home', compact('title', 'accounts'));
+        
+
+       
     } 
 }

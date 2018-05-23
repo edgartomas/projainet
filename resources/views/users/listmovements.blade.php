@@ -27,8 +27,13 @@
                     
                 </tr>
             </thead>
+<<<<<<< HEAD
             <tbody>  
          
+=======
+            <tbody>
+           
+>>>>>>> e448d24e242094c2812c6802f484936b294c4341
                @foreach($movements as $movement)
                 <tr>
                     

@@ -28,9 +28,11 @@
 	</div>
 	<br>
 	<div class="row">
-		<div class="col text-right">
-			<a class="btn btn-primary" href="{{ route('account.create') }}" role="button">Create new movement</a>
-		</div>
+	@can('add-movement', $account->owner->id)
+		<a class="btn btn-primary" href="{{ route('movements.create', $account )}}" role="button">Add Movements</a>
+		&nbsp
+		@endcan
+		<a class="btn btn-primary" href="{{ route('accounts.opened', $account->owner )}}" role="button">Accounts</a>
 	</div>
 	<br>
 	<div class="row">
@@ -47,6 +49,7 @@
                     <th>Start balance</th>
                     <th>Value</th>
 					<th>End Balance</th>
+					<th></th>
 				</tr> 
 				</thead>
 				<tbody>
@@ -70,6 +73,14 @@
                         <td>
                             {{ $movement->end_balance }}
                         </td>
+						<td>
+						<a class="btn btn-primary" href="{{ route('movement.edit', $movement )}}" role="button">Edit</a>
+						<form class="form-inline" method="post" action="{{ route('movement.delete', $movement)}}" style="display: inline;">
+								@csrf
+								@method('delete')
+									<button type="submit" class="btn btn-danger">Remove</button>
+								</form>
+						</td>
 					</tr>
 					@endforeach
 				</tbody>

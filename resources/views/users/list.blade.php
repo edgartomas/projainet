@@ -112,7 +112,7 @@
 									<button type="submit" class="btn btn-primary btn-sm">Promote</button>
 								</form> 
 							@else
-								<form method="post" class="from-inline" action="{{ route('user.demote', $user->id) }}" style="display:inline;">
+								<form method="post" class="user-is-admin from-inline" action="{{ route('user.demote', $user->id) }}" style="display:inline;">
 								@csrf
 								@method('patch')
 									<button type="submit" class="btn btn-primary btn-sm">Demote</button>
@@ -126,10 +126,10 @@
 									<button type="submit" class="btn btn-info btn-sm">Block</button>
 								</form> 
 							@else
-								<form method="post" class="form-inline" action="{{ route('user.unblock', $user->id) }}" style="display:inline;">
+								<form method="post" class="user-is-blocked form-inline" action="{{ route('user.unblock', $user->id) }}" style="display:inline;">
 									@csrf
 									@method('patch')
-									<button type="submit" class="btn btn-info btn-sm">Unblock</button>
+									<button type="submit" class="btn btn-info btn-sm ">Unblock</button>
 								</form> 
 							@endif
 						@endif

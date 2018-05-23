@@ -24,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-            @dump($movements)
+           
                @foreach($movements as $movement)
                 <tr>
                     

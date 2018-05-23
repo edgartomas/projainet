@@ -31,8 +31,36 @@ class AuthServiceProvider extends ServiceProvider
             return $auth->id != $user_id;
         });
 
+        Gate::define('view-account', function($auth, $user_id){
+            return $auth->id == $user_id || $auth->isAssociate($user_id);
+        });
+
+        Gate::define('add-account', function($auth, $owner_id){
+            return $auth->id == $owner_id;
+        });
+
+        Gate::define('edit-account', function($auth, $user_id){
+            return $auth->id == $owner_id;
+        });
+
+        Gate::define('view-movement', function($auth, $user_id){
+            return $auth->id == $user_id || $auth->isAssociate($user_id);
+        });
+
+        Gate::define('add-movement', function($auth, $owner_id){
+            return $auth->id == $owner_id;
+        });
+
         Gate::define('edit-account', function($auth, $owner_id){
             return $auth->id == $owner_id;
+        });
+
+        Gate::define('remove-movement', function($auth, $movement){
+            return $auth->id === $movement->account->owner_id;
+        });
+
+        Gate::define('view-dashboard', function($auth, $user){
+            return $auth->id == $user->id;
         });
     }
 }

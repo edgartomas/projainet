@@ -35,7 +35,7 @@
 						</td>
 						<td>{{ $user->name }}</td>
 						<td>{{ $user->email }}</td>
-						<td><button type="button" class="btn btn-primary">View Accounts</button></td>
+						<td><a class="btn btn-primary" href="{{ route('accounts.index', $user)}}" role="button">View Accounts</a></td>
 					</tr>
 					@endforeach
 				</tbody>

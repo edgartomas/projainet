@@ -10,7 +10,7 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-			@endif
+				@endif
 			@if (session('status'))
 				<div class="alert alert-success">
 					{{ session('status') }}
@@ -23,13 +23,15 @@
 		</div>
 	<div class="row">
 		<div class="col text-center">
-			<h1>{{ $title }}</h1>
+			<h1>{{ $title}}</h1>
 		</div>
 	</div>
 	<br>
 	<div class="row">
 		<div class="col text-right">
-			<a class="btn btn-primary" href="{{ route('account.create') }}" role="button">Create new account</a>
+			@can('add-account', $user->id)
+				<a class="btn btn-primary" href="{{ route('account.create') }}" role="button">Create new account</a>
+			@endcan
 			@yield('buttons')
 		</div>
 	</div>
@@ -48,6 +50,7 @@
                     <th>Type</th>
                     <th>Balance</th>
 					<th></th>
+					<th></th>
 				</tr> 
 				</thead>
 				<tbody>
@@ -61,28 +64,34 @@
 							{{ $account->current_balance }}
 						</td>
 						<td>
+							@if(!$account->trashed())
+								<a class="btn btn-primary" href="{{ route('movements.list', $account )}}" role="button">View Movements</a>
+							@endif
+						</td>
+						<td>
+						@can('add-account', $user->id)
 							@if($account->trashed())
 							<form class="form-inline" method="post" action="{{ route('accounts.reopen', $account)}}" style="display: inline;">
 								@csrf
 								@method('patch')
-								<button type="submit" class="btn btn-primary">Open</button>
+								<button type="submit" class="btn btn-success">Open</button>
 							</form>
 							@else
-								<a class="btn btn-primary" href="{{ route('movements.list', $account )}}" role="button">View Movements</a>
-								<a class="btn btn-primary" href="{{ route('accounts.edit', $account )}}" role="button">Edit</a>
+								<a class="btn btn-warning" href="{{ route('accounts.edit', $account )}}" role="button">Edit</a>
 								<form class="form-inline" method="post" action="{{ route('accounts.close', $account)}}" style="display: inline;">
 								@csrf
 								@method('patch')
-									<button type="submit" class="btn btn-primary">Close</button>
+									<button type="submit" class="btn btn-danger">Close</button>
 								</form>
 							@endif
-							@empty($account->last_movement_date)
+							@if(!$account->haveMovements())
 								<form class="form-inline" method="post" action="{{ route('accounts.destroy', $account)}}" style="display: inline;">
 								@csrf
 								@method('delete')
 									<button type="submit" class="btn btn-danger">Remove</button>
 								</form>
-							@endempty
+							@endif
+						@endcan
 						</td>
 					</tr>
 					@endforeach

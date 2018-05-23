@@ -33,7 +33,7 @@
                 </div>
                 <div class="form-group row">
                     <label>Date</label>
-                    <input type="text" class="form-control" name="date" value="{{ old('date') }}">
+                    <input type="date" class="form-control" name="date" value="{{ old('date') }}">
                 </div>
                 <div class="form-group row">
                     <label>Account Type</label>

@@ -7,19 +7,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Account;
+use App\User;
+use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     public function index($user)
     {   
-        $accounts = Account::withTrashed()->where('owner_id', '=', $user)->with('accountType')->paginate(10);
-        $title = 'List of all accounts';
-        return view('accounts.all', compact('title','accounts'));       
+        if(Auth::user()->can('view-account', $user)){
+            $user = User::findOrFail($user);
+            $accounts = $user->accounts()->withTrashed()->with('accountType')->paginate(10);
+            $title = 'List of all accounts - ' . $user->name;
+            return view('accounts.all', compact('title','accounts', 'user'));   
+        } else {
+            return abort(403, 'Access denied.');
+        } 
     }
 
     public function create(){
@@ -31,13 +34,25 @@ class AccountController extends Controller
 
         $account = $request->validate([
             'account_type_id' => 'required|exists:account_types,id',
-            'date' => 'required|date',
-            'code' => 'required|string|min:6|max:255|unique:accounts,code,'.Auth::user()->id,
+            'date' => 'nullable|date',
+            'code' => [
+                'required',
+                'string',
+                Rule::unique('accounts')->where(function($query){
+                    return $query->where('owner_id', Auth::user()->id);
+                }),
+            ],
             'description' => 'nullable|string|max:255',
             'start_balance' => 'required|numeric',
         ]);
 
-        $account['date'] = date("Y-m-d", strtotime($account['date']));
+        if(empty($account['date'])){
+            $account['date'] = date("Y-m-d");
+        } else {
+            $account['date'] = date("Y-m-d", strtotime($account['date']));
+        }
+
+
         $account['current_balance'] = $account['start_balance'];
         $account['owner_id'] = Auth::user()->id;
         $account['created_at'] = date("Y-m-d H:i:s");
@@ -57,7 +72,7 @@ class AccountController extends Controller
         if(Auth::user()->can('edit-account', $account->owner_id)){
             return view('accounts.edit', compact ('account', 'title'));
         } else {
-            return back()->withErrors("You can't edit this account");
+            return abort(403, 'Access denied.');
         } 
     }
 
@@ -73,36 +88,77 @@ class AccountController extends Controller
             ];
     
             if($request['code'] != $accountModel->code){
-                $rules['code'] = 'required|string|min:6|max:255|unique:accounts,code,'.Auth::user()->id;
+                $rules['code'] = [
+                                'required',
+                                'string',
+                                Rule::unique('accounts')->where(function($query){
+                                    return $query->where('owner_id', Auth::user()->id);
+                                }),
+                            ];
             }
     
-            $acc = $request->validate($rules);
-    
-            if(isset($accountModel->last_movement_update)){
-    
-            } else {
-                $acc['current_balance'] = $acc['start_balance'];
+            $account = $request->validate($rules);
+
+            if($account['start_balance'] != $accountModel->start_balance){
+
+                $movements = $accountModel->movements()->orderBy('date', 'asc')->get();
+
+                if($movements->isEmpty() || $accountModel->last_movement_date == null){
+                    $account['current_balance'] = $account['start_balance'];
+                }
+                
+                if($movements->isNotEmpty()){
+
+                    $account['current_balance'] = $accountModel->current_balance + ($account['start_balance'] - $accountModel->start_balance);
+
+                    for($i = 0; $i < $movements->count(); $i++){
+                        $movement = $movements->get($i);
+                        
+                        if($i == 0){
+                            $movement->start_balance = $account['start_balance'];
+                            $movement->end_balance = $account['start_balance'] + $movement->value;
+                        } else {
+                            $movementAnt = $movements->get($i - 1);
+
+                            $movement->start_balance = $movementAnt->end_balance;
+                            $movement->end_balance = $movementAnt->end_balance + $movement->value;
+                        }
+                        $movement->save();
+                    }
+                }
             }
-            
-            $accountModel->fill($acc);
+    
+
+            $accountModel->fill($account);
             $accountModel->save();
-    
             return redirect()->route('accounts.opened', Auth::user())->with('status', 'Account updated');
+            
+
         } else {
-            return back()->withErrors("You can't edit this account");
+            return abort(403, 'Access denied.');
         }
     }
 
     public function opened($user){
-        $accounts = Account::where('owner_id', '=', $user)->with('accountType')->paginate(10);
-        $title = 'List of open accounts';
-        return view('accounts.open', compact('title','accounts'));
+        if(Auth::user()->can('view-account', $user)){
+            $user = User::findOrFail($user);
+            $accounts = $user->accounts()->with('accountType')->paginate(10);
+            $title = 'List of open accounts - ' . $user->name;
+            return view('accounts.open', compact('title','accounts', 'user'));
+        } else {
+            return abort(403, 'Access denied.');
+        }
     }
 
     public function closed($user){
-        $accounts = Account::onlyTrashed()->where('owner_id', '=', $user)->with('accountType')->paginate(10);
-        $title = 'List of closed accounts';
-        return view('accounts.close', compact('title','accounts'));
+        if(Auth::user()->can('view-account', $user)){
+            $user = User::findOrFail($user);
+            $accounts = $user->accounts()->onlyTrashed()->with('accountType')->paginate(10);
+            $title = 'List of closed accounts - ' . $user->name;
+            return view('accounts.close', compact('title','accounts', 'user'));
+        } else {
+            return abort(403, 'Access denied.');
+        } 
     }
 
     public function close($account){
@@ -111,7 +167,7 @@ class AccountController extends Controller
             $account->delete();
             return back()->with('status', 'Account closed.');
         } else{
-            return back()->withErrors("You can't close this account");
+            return abort(403, 'Access denied.');
         }
     }
 
@@ -121,21 +177,21 @@ class AccountController extends Controller
             $account->restore();
             return back()->with('status', 'Account re-opened.');
         } else{
-            return back()->withErrors("You can't re-open this account");
+            return abort(403, 'Access denied.');
         }
     }
 
     public function destroy($account){
         $account = Account::withTrashed()->findOrFail($account);
+
         if(Auth::user()->can('edit-account', $account->owner_id)){
-            if(isset($account->last_movement_date)){
-                return back()->withErrors('Account cannot be removed.');
+            if(!$account->haveMovements() && empty($account->last_movement_date)){
+                $account->forceDelete();
+                return back()->with('status', 'Account removed.');
+                
             }
-            $account->forceDelete();
-            return back()->with('status', 'Account removed.');
-        } else{
-            return back()->withErrors("You can't remove this account");
         }
+        return abort(403, 'Access denied.');
     }
 
 }

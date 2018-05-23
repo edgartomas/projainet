@@ -11,9 +11,9 @@
 |
 */
 // Rota pagina inicial (Acessivel a todos)
-Route::get('/', 'WelcomeController@index')->name('index');
+Route::get('/', 'WelcomeController@index')->name('home');
 
-Route::prefix('users')->group(function(){
+Route::group(['prefix' => 'users', 'middleware' => ['auth', 'admin']], function(){
     //Rota lista de todos os users (Acessivel Admins)
     Route::get('/', 'UserController@index')->name('users.index');
 
@@ -32,7 +32,7 @@ Route::prefix('users')->group(function(){
     });
 });
 
-Route::prefix('me')->group(function(){
+Route::group(['prefix' => 'me', 'middleware' => 'auth'], function(){
 
     //Rota actualiza password utilizador (Acessivel a logados)
     Route::patch('/password', 'UserController@updatePassword')->name('password.update');
@@ -57,9 +57,9 @@ Route::prefix('me')->group(function(){
 });
 
 //Rota mostra a lista de user a (Acessivel a logados)
-Route::get('/profiles', 'ProfileController@index')->name('users.profiles');
+Route::get('/profiles', 'ProfileController@index')->middleware('auth')->name('users.profiles');
 
-Route::prefix('accounts/{user}')->group(function(){
+Route::group(['prefix' => 'accounts/{user}', 'middleware' => 'auth'], function(){
     Route::get('/', 'AccountController@index')->name('accounts.index');
 
     Route::get('/opened', 'AccountController@opened')->name('accounts.opened');
@@ -67,14 +67,14 @@ Route::prefix('accounts/{user}')->group(function(){
     Route::get('/closed', 'AccountController@closed')->name('accounts.closed');
 });
 
-Route::prefix('account')->group(function(){
+Route::group(['prefix' => 'account', 'middleware' => 'auth'], function(){
     //Rota vista criação conta
     Route::get('/', 'AccountController@create')->name('account.create');
 
     //Rota criar conta
     Route::post('/', 'AccountController@store')->name('account.store');
 
-    Route::prefix('{account}')->group(function(){
+    Route::prefix ('{account}')->group(function(){
         //Rota mostrar vista edição
         Route::get('/', 'AccountController@edit')->name('accounts.edit');
 
@@ -90,10 +90,34 @@ Route::prefix('account')->group(function(){
     });
 });
 
-Route::prefix('movements/{account}')->group(function(){
+Route::group(['prefix' => 'movements/{account}', 'middleware' => 'auth'],function(){
     Route::get('/', 'MovementController@index')->name('movements.list');
 
+    Route::get('create', 'MovementController@create')->name('movements.create');
+
+    Route::post('create', 'MovementController@store')->name('movements.store');
 });
+
+Route::group(['prefix' => 'movement/{movement}', 'middleware' => 'auth'],function(){
+
+    Route::get('/', 'MovementController@edit')->name('movement.edit');
+
+    Route::put('/', 'MovementController@update')->name('movement.update');
+
+    Route::delete('/', 'MovementController@destroy')->name('movement.delete');
+});
+
+Route::group(['prefix' => 'document/{movement}', 'middleware' => 'auth'],function(){
+    Route::get('/', 'DocumentController@index')->name('document.index');
+
+    Route::delete('/', 'DocumentController@destroy')->name('document.delete');
+});
+
+Route::get('/dashboard/{user}', 'DashboardController@index')->middleware('auth')->name('dashboard');
+
+
+
+
 
 Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
 
@@ -108,7 +132,7 @@ Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.
 //Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
 
 //Rota dashboard do user (Acessivel a logados)
-Route::get('/dashboard', 'DashboardController@index')->name('home');
+
 
 Auth::routes();
 

@@ -8,10 +8,6 @@ use Auth;
 
 class AssociatesController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     public function index(){
 
@@ -29,7 +25,7 @@ class AssociatesController extends Controller
         $id = $request->input('associated_user');
 
         if(Auth::user()->cannot('do-operation', $id)){
-            return back()->withErrors("You can't desassociate from yourself.");
+            return abort(403, 'Access denied.');
         }
 
         Auth::user()->associate()->attach($id);
@@ -39,7 +35,7 @@ class AssociatesController extends Controller
 
     public function destroy($id){
         if(Auth::user()->cannot('do-operation', $id)){
-            return back()->withErrors("You can't desassociate from yourself.");
+            return abort(403, 'Access denied.');
         }
 
         Auth::user()->associate()->detach($id);

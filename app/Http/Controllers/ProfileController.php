@@ -7,10 +7,6 @@ use App\User;
 
 class ProfileController extends Controller
 {
-    public function __construct(){
-        $this->middleware(['auth']);
-    }
-
     public function index(Request $request){
 
         $title = "List of profiles";

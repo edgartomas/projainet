@@ -11,6 +11,9 @@
 
         </div>
 
+        <div> <a class="btn btn-xs btn-primary">Adicionar Movimentos</a></div>
+       
+
         
         
         <table class="table" style="margin-top: 50px">
@@ -19,12 +22,13 @@
                     <th>  Start Balance</th>
                     <th>  Current Value</th>
                     <th>  End Balance</th>
+                    <th>  Actions    </th>
                 
                     
                 </tr>
             </thead>
-            <tbody>
-            @dump($movements)
+            <tbody>  
+         
                @foreach($movements as $movement)
                 <tr>
                     
@@ -37,7 +41,10 @@
                      <td> 
                         {{$movement->end_balance}}
                     </td>
-                                                        
+                    <td>
+                        <a class="btn btn-xs btn-primary">Editar</a>
+                        <a class="btn btn-xs btn-primary">Delete</a>
+                    </td>                              
                    
                 </tr>
                 @endforeach

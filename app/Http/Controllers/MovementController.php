@@ -18,7 +18,7 @@ class MovementController extends Controller
 
         if(Auth::user()->can('view-movement', $account->owner->id)){
 
-            $movements = Movement::where('account_id', '=' , $account->id)->orderBy('date', 'desc')->with('movementCategory')->paginate(10);
+            $movements = Movement::where('account_id', '=' , $account->id)->orderBy('date', 'desc')->orderBy('created_at', 'desc')->with('movementCategory')->paginate(10);
 
             $title = 'List of Moviments';
 
@@ -61,33 +61,40 @@ class MovementController extends Controller
 
             $category = MovementCategory::find($movement['movement_category_id']);
 
-            if($category->type == 'expense'){
-                $movement['value'] = -$movement['value'];
-            }
-
             $movement['type'] = $category->type;
 
             if(!isset($account->last_movement_date) || $movement['date'] >= $account->last_movement_date){
                 $movement['start_balance'] = $account->current_balance;
-                $movement['end_balance'] = $accountModel['current_balance'] = $account->current_balance + $movement['value'];
+                if($movement['type'] == 'expense'){
+                    $movement['end_balance'] = $accountModel['current_balance'] = $account->current_balance - $movement['value'];
+                } else {
+                    $movement['end_balance'] = $accountModel['current_balance'] = $account->current_balance + $movement['value'];
+                }
                 $accountModel['last_movement_date'] = $movement['date'];
             } else {
-                $movements = Movement::where('account_id', $account->id)->where('date', '>', $movement['date'])->orderBy('date', 'asc')->get();
+                $movements = Movement::where('account_id', $account->id)->where('date', '>', $movement['date'])->orderBy('date', 'asc')->orderBy('created_at', 'asc')->get();
 
                 for($i = 0; $i < $movements->count(); $i++){
                     if($i == 0){
                         $movement['start_balance'] = $movements->get($i)->start_balance;
-                        $movement['end_balance'] = $movement['start_balance'] + $movement['value'];
-
+                        if($movement['type'] == 'expense'){
+                            $movement['end_balance'] = $movement['start_balance'] - $movement['value'];
+                        } else {
+                            $movement['end_balance'] = $movement['start_balance'] + $movement['value'];
+                        }
                         $movements->get($i)->start_balance = $movement['end_balance'];
                         $movements->get($i)->end_balance = $movement['end_balance'] + $movements->get($i)->value;
                     } else {
                         $movements->get($i)->start_balance = $movements->get($i-1)->end_balance;
-                        $movements->get($i)->end_balance = $movements->get($i)->start_balance + $movements->get($i)->value;
+                        if($movement['type'] == 'expense'){
+                            $movements->get($i)->end_balance = $movements->get($i)->start_balance - $movements->get($i)->value;
+                        } else {
+                            $movements->get($i)->end_balance = $movements->get($i)->start_balance + $movements->get($i)->value;
+                        }
+
                     }
                     $movements->get($i)->save();
                 }
-                
                 $accountModel['current_balance'] = $movements->last()->end_balance;
             }
 

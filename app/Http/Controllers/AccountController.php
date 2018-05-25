@@ -101,7 +101,7 @@ class AccountController extends Controller
 
             if($account['start_balance'] != $accountModel->start_balance){
 
-                $movements = $accountModel->movements()->orderBy('date', 'asc')->get();
+                $movements = $accountModel->movements()->orderBy('date', 'asc')->orderBy('created_at', 'asc')->get();
 
                 if($movements->isEmpty() || $accountModel->last_movement_date == null){
                     $account['current_balance'] = $account['start_balance'];
@@ -116,12 +116,22 @@ class AccountController extends Controller
                         
                         if($i == 0){
                             $movement->start_balance = $account['start_balance'];
-                            $movement->end_balance = $account['start_balance'] + $movement->value;
+                            if($movement->type == "expense"){
+                                $movement->end_balance = $account['start_balance'] - $movement->value;
+                            } else {
+                                $movement->end_balance = $account['start_balance'] + $movement->value;
+                            }
+                            
                         } else {
                             $movementAnt = $movements->get($i - 1);
 
                             $movement->start_balance = $movementAnt->end_balance;
-                            $movement->end_balance = $movementAnt->end_balance + $movement->value;
+                            if($movement->type == "expense"){
+                                $movement->end_balance = $movementAnt->end_balance - $movement->value;
+                            } else {
+                                $movement->end_balance = $movementAnt->end_balance + $movement->value;
+                            }
+                            
                         }
                         $movement->save();
                     }

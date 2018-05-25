@@ -56,7 +56,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('remove-movement', function($auth, $movement){
-            return $auth->id === $movement->account->owner_id;
+            return $auth->id == $movement->account->owner_id;
         });
 
         Gate::define('view-dashboard', function($auth, $user){

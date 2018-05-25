@@ -51,8 +51,11 @@ class MovementController extends Controller
             $movement = $request->validate([
                 'movement_category_id' => 'required|Exists:movement_categories,id',
                 'date' => 'required|date|before:tomorrow',
-                'value' => 'required|numeric|min:0',
+                'value' => 'required|numeric|min:0.01',
                 'description' => 'nullable|string',
+                'document_description'=> 'required_if:document_file, file',
+                'document_file' => 'file|mimes:pdf, png, jpeg',
+                
             ]);
 
             $movement['account_id'] = $account->id;
@@ -104,17 +107,24 @@ class MovementController extends Controller
 
             return redirect()->route('movements.list', $account->id)->with('status', 'Movement created');
         } else {
-            return abort(403, 'Access denied.');
+            return abort(403);
         } 
     }   
 
     public function Edit($movement)
     {
+
         $movement = Movement::findOrFail($movement);
+
+        if(Auth::user()->can('edit-movement', $movement->account->owner_id)){
         $categories = MovementCategory::all();
         $title = 'Edit Movement';
        
         return view('movements.edit', compact ('movement', 'title', 'categories'));
+        }
+
+        return abort(403, 'Access denied');
+        
     }
 
     public function destroy($movement){

@@ -138,17 +138,14 @@ class UserController extends Controller
 
         $user = $request->validate($rules);
 
-
         if($request->hasfile('profile_photo') && $request->file('profile_photo')->isValid()){
-
             
             $filepath = $request->file('profile_photo')->store('profiles', 'public');
 
-            $user['profile_photo'] = basename($filepath);
-            
+            $user['profile_photo'] = basename($filepath);  
         }
 
-        $userModel =  User::findOrFail(Auth::user()->id);
+        $userModel = User::findOrFail(Auth::user()->id);
         $userModel->fill($user);
         $userModel->save();
 

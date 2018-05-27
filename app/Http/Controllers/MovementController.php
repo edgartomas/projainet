@@ -18,7 +18,7 @@ class MovementController extends Controller
 
         if(Auth::user()->can('view-movement', $account->owner->id)){
 
-            $movements = Movement::where('account_id', '=' , $account->id)->orderBy('date', 'desc')->with('movementCategory')->paginate(10);
+            $movements = Movement::where('account_id', '=' , $account->id)->orderBy('date', 'desc')->orderBy('created_at', 'desc')->with('movementCategory')->paginate(10);
 
             $title = 'List of Moviments';
 
@@ -51,63 +51,73 @@ class MovementController extends Controller
             $movement = $request->validate([
                 'movement_category_id' => 'required|Exists:movement_categories,id',
                 'date' => 'required|date|before:tomorrow',
-                'value' => 'required|numeric|min:0',
+                'value' => 'required|numeric|min:0.01',
                 'description' => 'nullable|string',
+                //'document_description'=> 'required_if:document_file, file',
+                //'document_file' => 'file|mimes:pdf, png, jpeg',
+                
             ]);
 
             $movement['account_id'] = $account->id;
             $movement['date'] = date("Y-m-d", strtotime($movement['date']));
-            $movement['created_at'] = date('Y-m-d H:i:s');
+            $movement['created_at'] = now();
 
             $category = MovementCategory::find($movement['movement_category_id']);
 
-            if($category->type == 'expense'){
-                $movement['value'] = -$movement['value'];
+            $movement['type'] = $category->type;
+
+            $difference = $movement['value'];
+
+            if($movement['type'] == 'expense'){
+                $difference = -$difference;
             }
 
-            $movement['type'] = $category->type;
 
             if(!isset($account->last_movement_date) || $movement['date'] >= $account->last_movement_date){
                 $movement['start_balance'] = $account->current_balance;
-                $movement['end_balance'] = $accountModel['current_balance'] = $account->current_balance + $movement['value'];
-                $accountModel['last_movement_date'] = $movement['date'];
+
+                $movement['end_balance'] = $account->current_balance + $difference;
+
+                $account->last_movement_date = $movement['date'];
             } else {
-                $movements = Movement::where('account_id', $account->id)->where('date', '>', $movement['date'])->orderBy('date', 'asc')->get();
-
-                for($i = 0; $i < $movements->count(); $i++){
-                    if($i == 0){
-                        $movement['start_balance'] = $movements->get($i)->start_balance;
-                        $movement['end_balance'] = $movement['start_balance'] + $movement['value'];
-
-                        $movements->get($i)->start_balance = $movement['end_balance'];
-                        $movements->get($i)->end_balance = $movement['end_balance'] + $movements->get($i)->value;
-                    } else {
-                        $movements->get($i)->start_balance = $movements->get($i-1)->end_balance;
-                        $movements->get($i)->end_balance = $movements->get($i)->start_balance + $movements->get($i)->value;
-                    }
-                    $movements->get($i)->save();
-                }
                 
-                $accountModel['current_balance'] = $movements->last()->end_balance;
+                $movements = $account->movements()->where('date', '>', $movement['date'])->orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();
+
+                $movement['start_balance'] = $movements->last()->start_balance;
+                $movement['end_balance'] = $movements->last()->start_balance + $difference;
+
+                foreach($movements as $mov){
+                    $mov->start_balance += $difference;
+                    $mov->end_balance += $difference;
+                    $mov->save();
+                }
             }
 
-            $account->fill($accountModel);
+            $account->current_balance += $difference;
+            
             $account->save();
             Movement::create($movement);
 
             return redirect()->route('movements.list', $account->id)->with('status', 'Movement created');
         } else {
-            return abort(403, 'Access denied.');
+            return abort(403);
         } 
     }   
 
     public function Edit($movement)
     {
+
         $movement = Movement::findOrFail($movement);
+
+        if(Auth::user()->can('edit-movement', $movement->account->owner_id)){
         $categories = MovementCategory::all();
         $title = 'Edit Movement';
        
         return view('movements.edit', compact ('movement', 'title', 'categories'));
+        }
+
+        return abort(403, 'Access denied');
+        
     }
 
     public function destroy($movement){
@@ -115,38 +125,38 @@ class MovementController extends Controller
         $movement = Movement::findOrFail($movement);
 
         if(Auth::user()->can('remove-movement', $movement)){
+
             $account = $movement->account;
-            if($account->numberMovements() > 1){
-                if($movement->date == $account->last_movement_date && $movement->end_balance == $account->current_balance){
-                    //Estamos a eliminar o ultimo movimento feito
-                    $mov = Movement::where('account_id', $account->id)->where('date', '<', $movement['date'])->orderBy('date', 'desc')->first();
-                    $account->last_movement_date = $mov->date;
-                    $account->current_balance = $mov->end_balance;
-                } else {
-                    $movements = Movement::where('account_id', $account->id)->where('date', '>', $movement['date'])->orderBy('date', 'asc')->get();
-                    for($i = 0; $i < $movements->count(); $i++){
-                        $mov = $movements->get($i);
-                        if($i == 0){
-                            $mov->start_balance = $movement->start_balance;
-                            $mov->end_balance = $movement->start_balance + $mov->value;
-                        } else {
-                            $movAnt = $movements->get($i - 1);
-                            $mov->start_balance = $movAnt->end_balance;
-                            $mov->end_balance = $movAnt->end_balance + $mov->value;
-                        }
-                        $mov->save();
-                    }
-                    $account->current_balance = $movements->last()->end_balance;
-                }
-            } else {
-                $account->current_balance = $movement->start_balance;
-                $account->last_movement_date = null;
+
+            $difference = $movement->value;
+
+            if($movement->type == 'revenue'){
+                $difference = -$difference;
             }
-            $account->save();
+
+            $movements = $account->movements()->where('date', '>=', $movement->date)->orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();
+
+            foreach($movements as $mov){
+                $mov->start_balance += $difference;
+                $mov->end_balance += $difference;
+                $mov->save();
+            }
+
             $movement->delete();
+
+            if($movement->date == $account->last_movement_date && $movement->end_balance == $account->current_balance){
+                $account->last_movement_date = $account->movements->max('date');
+            }
+
+            $account->current_balance += $difference;
+
+            $account->save();
+
             return redirect()->route('movements.list', $account->id)->with('status', 'Movement deleted');
+        } else {
+            return abort(403, 'Access denied.');
         }
 
-        return abort(403, 'Access denied.');
+       
     }
 }

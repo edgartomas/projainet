@@ -23,7 +23,7 @@
     <br>
     <div class="row">
         <div class="col">
-        <form action="" method="post" class="form-group">
+        <form action="{{ route('movement.update', $movement) }}" method="post" class="form-group">
                 @csrf
                 <div class="form-group row">
                     <label>Movement Type</label>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Auth;
+use App\Rules\ValidateNotMyself;
 
 class AssociatesController extends Controller
 {
@@ -22,20 +23,31 @@ class AssociatesController extends Controller
 
     public function create(Request $request){
 
-        $id = $request->input('associated_user');
+        $associated_user_id = $request['associated_user'];
 
-        if(Auth::user()->cannot('do-operation', $id)){
+        $request->validate([
+            'associated_user' => 'required|exists:users,id',
+        ]);
+
+        if(Auth::user()->cannot('do-operation', $associated_user_id)){
             return abort(403, 'Access denied.');
         }
 
-        Auth::user()->associate()->attach($id);
+        Auth::user()->associate()->attach(['associated_user_id'=>$associated_user_id]);
 
         return back()->with('status', 'Users associated.');
     }
 
     public function destroy($id){
+
         if(Auth::user()->cannot('do-operation', $id)){
             return abort(403, 'Access denied.');
+        }
+
+        $user = User::findOrFail($id);
+
+        if(Auth::user()->id == $user->id){
+            return back()->withErrors('You cannot desassociate with yourself.');
         }
 
         Auth::user()->associate()->detach($id);

@@ -85,6 +85,7 @@ class AccountController extends Controller
                 'account_type_id' => 'required|exists:account_types,id',
                 'description' => 'nullable|string|max:255',
                 'start_balance' => 'required|numeric',
+                
             ];
     
             if($request['code'] != $accountModel->code){
@@ -99,43 +100,37 @@ class AccountController extends Controller
     
             $account = $request->validate($rules);
 
+            //verifica se o utilizador mudou realmente o valor
             if($account['start_balance'] != $accountModel->start_balance){
-
-                $movements = $accountModel->movements()->orderBy('date', 'asc')->get();
-
-                if($movements->isEmpty() || $accountModel->last_movement_date == null){
-                    $account['current_balance'] = $account['start_balance'];
-                }
                 
-                if($movements->isNotEmpty()){
+                //verifica se a conta não tem movimentos
+                if(!$accountModel->haveMovements()){
+                    //Caso não tenha actualiza o valor corrente
+                    $account['current_balance'] = $account['start_balance'];
+                } else {
 
-                    $account['current_balance'] = $accountModel->current_balance + ($account['start_balance'] - $accountModel->start_balance);
+                    $difference = $account['start_balance'] - $accountModel->start_balance;
 
+                    //Senão vai buscar os movimentos da conta
+                    $movements = $accountModel->movements;
+
+                    //Atualiza o valor corrente da conta
+                    $account['current_balance'] = $accountModel->current_balance + $difference;
+
+                    //Percorre os movimentos
                     for($i = 0; $i < $movements->count(); $i++){
                         $movement = $movements->get($i);
-                        
-                        if($i == 0){
-                            $movement->start_balance = $account['start_balance'];
-                            $movement->end_balance = $account['start_balance'] + $movement->value;
-                        } else {
-                            $movementAnt = $movements->get($i - 1);
-
-                            $movement->start_balance = $movementAnt->end_balance;
-                            $movement->end_balance = $movementAnt->end_balance + $movement->value;
-                        }
+                        $movement->start_balance += $difference;
+                        $movement->end_balance += $difference;
                         $movement->save();
                     }
                 }
             }
-    
-
             $accountModel->fill($account);
             $accountModel->save();
             return redirect()->route('accounts.opened', Auth::user())->with('status', 'Account updated');
-            
-
         } else {
-            return abort(403, 'Access denied.');
+            return abort(403);
         }
     }
 
@@ -184,12 +179,16 @@ class AccountController extends Controller
     public function destroy($account){
         $account = Account::withTrashed()->findOrFail($account);
 
-        if(Auth::user()->can('edit-account', $account->owner_id)){
-            if(!$account->haveMovements() && empty($account->last_movement_date)){
+        if(Auth::user()->can('remove-account', $account)){
+
+            if(!$account->haveMovements() && !isset($account->last_movement_date)){
                 $account->forceDelete();
                 return back()->with('status', 'Account removed.');
                 
+            } else {
+                return back()->withErrors('Account with movements');
             }
+
         }
         return abort(403, 'Access denied.');
     }

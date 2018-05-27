@@ -40,7 +40,11 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('edit-account', function($auth, $user_id){
-            return $auth->id == $owner_id;
+            return $auth->id == $user_id;
+        });
+
+        Gate::define('remove-account', function($auth, $account){
+            return $auth->id == $account->owner_id;
         });
 
         Gate::define('view-movement', function($auth, $user_id){
@@ -51,16 +55,16 @@ class AuthServiceProvider extends ServiceProvider
             return $auth->id == $owner_id;
         });
 
-        Gate::define('edit-account', function($auth, $owner_id){
+        Gate::define('edit-movement', function($auth, $owner_id){
             return $auth->id == $owner_id;
         });
 
         Gate::define('remove-movement', function($auth, $movement){
-            return $auth->id === $movement->account->owner_id;
+            return $auth->id == $movement->account->owner_id;
         });
 
         Gate::define('view-dashboard', function($auth, $user){
-            return $auth->id == $user->id;
+            return $auth->id == $user->id || $auth->isAssociate($user->id);
         });
     }
 }

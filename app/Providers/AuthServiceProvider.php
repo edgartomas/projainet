@@ -43,6 +43,10 @@ class AuthServiceProvider extends ServiceProvider
             return $auth->id == $user_id;
         });
 
+        Gate::define('remove-account', function($auth, $account){
+            return $auth->id == $account->owner_id;
+        });
+
         Gate::define('view-movement', function($auth, $user_id){
             return $auth->id == $user_id || $auth->isAssociate($user_id);
         });

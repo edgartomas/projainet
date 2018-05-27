@@ -112,7 +112,7 @@ class AccountController extends Controller
                     $difference = $account['start_balance'] - $accountModel->start_balance;
 
                     //Senão vai buscar os movimentos da conta
-                    $movements = $accountModel->movements()->orderBy('date', 'asc')->orderBy('created_at', 'asc')->get();
+                    $movements = $accountModel->movements;
 
                     //Atualiza o valor corrente da conta
                     $account['current_balance'] = $accountModel->current_balance + $difference;
@@ -179,12 +179,16 @@ class AccountController extends Controller
     public function destroy($account){
         $account = Account::withTrashed()->findOrFail($account);
 
-        if(Auth::user()->can('edit-account', $account->owner_id)){
-            if(!$account->haveMovements() && empty($account->last_movement_date)){
+        if(Auth::user()->can('remove-account', $account)){
+
+            if(!$account->haveMovements()){
                 $account->forceDelete();
                 return back()->with('status', 'Account removed.');
                 
+            } else {
+                return back()->withErrors('Account with movements');
             }
+
         }
         return abort(403, 'Access denied.');
     }

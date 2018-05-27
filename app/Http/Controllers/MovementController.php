@@ -53,55 +53,47 @@ class MovementController extends Controller
                 'date' => 'required|date|before:tomorrow',
                 'value' => 'required|numeric|min:0.01',
                 'description' => 'nullable|string',
-                'document_description'=> 'required_if:document_file, file',
-                'document_file' => 'file|mimes:pdf, png, jpeg',
+                //'document_description'=> 'required_if:document_file, file',
+                //'document_file' => 'file|mimes:pdf, png, jpeg',
                 
             ]);
 
             $movement['account_id'] = $account->id;
             $movement['date'] = date("Y-m-d", strtotime($movement['date']));
-            $movement['created_at'] = date('Y-m-d H:i:s');
+            $movement['created_at'] = now();
 
             $category = MovementCategory::find($movement['movement_category_id']);
 
             $movement['type'] = $category->type;
 
-            if(!isset($account->last_movement_date) || $movement['date'] >= $account->last_movement_date){
-                $movement['start_balance'] = $account->current_balance;
-                if($movement['type'] == 'expense'){
-                    $movement['end_balance'] = $accountModel['current_balance'] = $account->current_balance - $movement['value'];
-                } else {
-                    $movement['end_balance'] = $accountModel['current_balance'] = $account->current_balance + $movement['value'];
-                }
-                $accountModel['last_movement_date'] = $movement['date'];
-            } else {
-                $movements = Movement::where('account_id', $account->id)->where('date', '>', $movement['date'])->orderBy('date', 'asc')->orderBy('created_at', 'asc')->get();
+            $difference = $movement['value'];
 
-                for($i = 0; $i < $movements->count(); $i++){
-                    if($i == 0){
-                        $movement['start_balance'] = $movements->get($i)->start_balance;
-                        if($movement['type'] == 'expense'){
-                            $movement['end_balance'] = $movement['start_balance'] - $movement['value'];
-                        } else {
-                            $movement['end_balance'] = $movement['start_balance'] + $movement['value'];
-                        }
-                        $movements->get($i)->start_balance = $movement['end_balance'];
-                        $movements->get($i)->end_balance = $movement['end_balance'] + $movements->get($i)->value;
-                    } else {
-                        $movements->get($i)->start_balance = $movements->get($i-1)->end_balance;
-                        if($movement['type'] == 'expense'){
-                            $movements->get($i)->end_balance = $movements->get($i)->start_balance - $movements->get($i)->value;
-                        } else {
-                            $movements->get($i)->end_balance = $movements->get($i)->start_balance + $movements->get($i)->value;
-                        }
-
-                    }
-                    $movements->get($i)->save();
-                }
-                $accountModel['current_balance'] = $movements->last()->end_balance;
+            if($movement['type'] == 'expense'){
+                $difference = -$difference;
             }
 
-            $account->fill($accountModel);
+            if(!isset($account->last_movement_date) || $movement['date'] >= $account->last_movement_date){
+                $movement['start_balance'] = $account->current_balance;
+
+                $movement['end_balance'] = $account->current_balance + $difference;
+
+                $account->last_movement_date = $movement['date'];
+            } else {
+                
+                $movements = $account->movements()->where('date', '>', $movement['date'])->orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();
+
+                $movement['start_balance'] = $movements->last()->start_balance;
+                $movement['end_balance'] = $movements->last()->start_balance + $difference;
+
+                foreach($movements as $mov){
+                    $mov->start_balance += $difference;
+                    $mov->end_balance += $difference;
+                    $mov->save();
+                }
+            }
+
+            $account->current_balance += $difference;
+            
             $account->save();
             Movement::create($movement);
 

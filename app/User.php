@@ -31,7 +31,7 @@ class User extends Authenticatable
     
         $user = User::findOrFail($user_id);
 
-        return $this->associate->contains($user);
+        return $this->associateOf->contains($user);
     }
 
     public function adminToString(){
@@ -43,11 +43,11 @@ class User extends Authenticatable
     }
 
     public function associate(){
-        return $this->belongsToMany( User::class, 'associate_members', 'main_user_id', 'associated_user_id');
+        return $this->belongsToMany( User::class, 'associate_members', 'main_user_id', 'associated_user_id')->withPivot('created_at');
     }
 
     public function associateOf(){
-        return $this->belongsToMany( User::class, 'associate_members', 'associated_user_id', 'main_user_id');
+        return $this->belongsToMany( User::class, 'associate_members', 'associated_user_id', 'main_user_id')->withPivot('created_at');
     }
     
     public function accounts(){

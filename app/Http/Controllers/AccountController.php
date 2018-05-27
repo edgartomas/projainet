@@ -181,7 +181,7 @@ class AccountController extends Controller
 
         if(Auth::user()->can('remove-account', $account)){
 
-            if(!$account->haveMovements()){
+            if(!$account->haveMovements() && !isset($account->last_movement_date)){
                 $account->forceDelete();
                 return back()->with('status', 'Account removed.');
                 

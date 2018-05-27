@@ -38,6 +38,6 @@ class ValidatePassword implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'Old password incorrect.';
     }
 }

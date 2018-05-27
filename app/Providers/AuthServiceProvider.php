@@ -64,7 +64,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('view-dashboard', function($auth, $user){
-            return $auth->id == $user->id;
+            return $auth->id == $user->id || $auth->isAssociate($user->id);
         });
     }
 }

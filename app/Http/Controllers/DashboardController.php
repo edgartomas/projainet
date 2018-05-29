@@ -14,13 +14,10 @@ class DashboardController extends Controller
         $user = User::findOrFail($user);
 
         if(Auth::user()->can('view-dashboard', $user)){
-            $accounts = $user->accounts;
+
+            $accounts = $user->allAccounts;
 
             $total = $accounts->sum('current_balance');
-
-            $totalAbs = $accounts->sum(function($account){
-                return abs($account['current_balance']);
-            });
 
             $totalRevenue = 0;
             $totalExpense = 0;
@@ -37,7 +34,7 @@ class DashboardController extends Controller
 
             $title = 'Dashboard - ' . $user->name;
 
-            return view('home', compact('title', 'accounts', 'total', 'totalAbs', 'totalRevenue', 'totalExpense'));
+            return view('home', compact('title', 'accounts', 'total', 'totalRevenue', 'totalExpense'));
         }
        
        return abort(403, 'Access denied');

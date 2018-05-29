@@ -10,7 +10,7 @@
 	<br>
 	<div class="row">
 		<div class="col-3">
-			<h4>Total balance: {{ $total }}</h4>
+			<h4>Total balance: {{ number_format($total, 2, '.', ',') }}</h4>
 			<br>
 			<h4>Total revenue: {{ number_format($totalRevenue, 2) }}</h4>
 			<br>
@@ -27,6 +27,7 @@
 							Code
 						</th>
 						<th>Type</th>
+						<th>Balance</th>
 						<th>Percent</th>
 						<th></th>
 					</tr> 
@@ -38,8 +39,11 @@
 								{{ $account->code}}
 							</td>
 							<td>{{ $account->accountType->name }}</td>
+							<td>{{ $account->current_balance }}</td>
 							<td>
-							{{ abs(number_format($account->current_balance / $totalAbs * 100, 2)) }}%
+							@if($total != 0 )
+								{{ number_format(($account->current_balance * 100 / $total), 2) }}%
+							@endif
 							</td>
 							<td>
 							<a class="btn btn-primary" href="{{ route('movements.list', $account )}}" role="button">View Movements</a>

@@ -34,6 +34,12 @@ class User extends Authenticatable
         return $this->associateOf->contains($user);
     }
 
+    public function isAlreadyAssociate($user_id){
+        $user = User::findOrFail($user_id);
+
+        return $this->associate->contains($user);
+    }
+
     public function adminToString(){
         return $this->admin == 1 ? 'Admin.' : 'Normal';
     }
@@ -52,5 +58,9 @@ class User extends Authenticatable
     
     public function accounts(){
         return $this->hasMany('App\Account', 'owner_id');
+    }
+
+    public function allAccounts(){
+        return $this->hasMany('App\Account', 'owner_id')->withTrashed();
     }
 }

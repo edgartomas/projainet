@@ -29,6 +29,14 @@ class AssociatesController extends Controller
             'associated_user' => 'required|exists:users,id',
         ]);
 
+        if($request['associated_user'] == Auth::user()->id){
+            return back()->withErrors(['associated_user' => 'You can associate to yourself']);
+        }
+
+        if(Auth::user()->isAlreadyAssociate($request['associated_user'])){
+            return back()->withErrors(['associated_user' => 'You can associate to an associate member']);
+        }
+
         if(Auth::user()->cannot('do-operation', $associated_user_id)){
             return abort(403, 'Access denied.');
         }
@@ -48,6 +56,10 @@ class AssociatesController extends Controller
 
         if(Auth::user()->id == $user->id){
             return back()->withErrors('You cannot desassociate with yourself.');
+        }
+
+        if(!Auth::user()->isAlreadyAssociate($id)){
+            return abort(404, 'User not found in your associates list');
         }
 
         Auth::user()->associate()->detach($id);

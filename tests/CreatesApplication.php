@@ -18,8 +18,6 @@ trait CreatesApplication
     public function createApplication()
     {
 
-        ini_set('memory_limit','2G');
-
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();

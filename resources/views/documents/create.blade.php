@@ -21,7 +21,7 @@
     <br>
     <div class="row d-flex justify-content-center">
         <div class="col-6">
-            <form action="{{ route('document.store', $movement) }}" method="post" class="form-group" enctype="multipart/form-data">
+            <form action="{{ route('document.update', $movement) }}" method="post" class="form-group" enctype="multipart/form-data">
                 @csrf
                 
                 <div class="form-group row">

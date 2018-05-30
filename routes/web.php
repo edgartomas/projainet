@@ -107,11 +107,13 @@ Route::group(['prefix' => 'movement/{movement}', 'middleware' => 'auth'],functio
     Route::delete('/', 'MovementController@destroy')->name('movement.delete');
 });
 
+Route::post('/documents/{movement}', 'DocumentController@store')->middleware('auth')->name('document.store');
+
 Route::group(['prefix' => 'document/{movement}', 'middleware' => 'auth'],function(){
     Route::get('/', 'DocumentController@index')->name('document.index');
     
     
-    Route::post('/', 'DocumentController@store');
+    
     
     Route::delete('/', 'DocumentController@destroy')->name('document.delete');
 });

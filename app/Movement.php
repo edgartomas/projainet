@@ -26,4 +26,6 @@ class Movement extends Model
     {
         return $this->belongsTo('App\MovementCategory');
     }
+
+    
 }

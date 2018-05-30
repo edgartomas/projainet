@@ -90,9 +90,7 @@
 											<button type="submit" class="btn btn-primary">Download</button>
 								</form>
 								@else
-								<form class="form-inline" method="get" action="{{ route('document.index', $movement->id)}}" style="display: inline;">
-										<button type="submit" class="btn btn-primary">Upload</button>
-								</form>
+								<a class="btn btn-primary" href="{{ route('document.index', $movement->id )}}" role="button">Upload</a>
 							@endisset
 							</td>
 						</td>

@@ -9,14 +9,41 @@
 	</div>
 	<br>
 	<div class="row">
-		<div class="col-3">
-			<h4>Total balance: {{ number_format($total, 2, '.', ',') }}</h4>
-			<br>
-			<h4>Total revenue: {{ number_format($totalRevenue, 2) }}</h4>
-			<br>
-			<h4>Total expense: {{ number_format($totalExpense, 2) }}</h4>
+		<div class="col">
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Balance
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">Total: {{ number_format($total, 2, '.', ',') }}</li>
+				</ul>
+			</div>
 		</div>
-		<div class="col-9">
+		<div class="col">
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Revenue
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">Total: {{ number_format($totalExpense, 2, '.', ',') }}</li>
+					
+				</ul>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card">
+				<div class="card-header bg-primary text-white">
+					Expense
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">Total: {{ number_format($totalRevenue, 2, '.', ',') }}</li>
+				</ul>
+			</div>
+		</div>		
+	</div>
+	<hr>
+	<div class="row">
+	<div class="col">
 			@if(count($accounts) == 0)
 				<h4>No accounts found</h4>
 			@else
@@ -52,9 +79,9 @@
 						@endforeach
 					</tbody>
 				</table>
+				{{$accounts->appends($_GET)->links()}}
 				@endif
-		</div>		
+		</div>
 	</div>
-	<hr>
 </div>
 @endsection

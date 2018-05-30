@@ -94,11 +94,13 @@ $associatesOf = Auth::user()->associateOf
 									<button type="submit" class="btn btn-danger" href="">Desassociate</a>
 								</form>
 							@else
+								@if($user->id != Auth::user()->id)
 								<form method="post" action="{{ route('associate.user') }}">
 									@csrf
 									<input type="text" class="form-control" name="associated_user" style="display: none;" value="{{ $user->id }}">
 									<button type="submit" class="btn btn-primary">Associate</button>
 								</form>
+								@endif
 							@endif
 						</td>
 					</tr>

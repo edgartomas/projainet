@@ -23,7 +23,7 @@ class DocumentController extends Controller
         if($request->hasFile('document_file') && $request->file('document_file')->isValid()){
             $document['type'] = $request->file('document_file')->getClientOriginalExtension();
             $document['original_name'] = $request->file('document_file')->getClientOriginalName();
-            $document['description'] = $movement['document_description'];
+            $document['description'] = $documentAux['document_description'];
 
             //dd($document);
 

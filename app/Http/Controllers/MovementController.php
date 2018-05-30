@@ -54,7 +54,7 @@ class MovementController extends Controller
                 'date' => 'required|date|before:tomorrow',
                 'value' => 'required|numeric|min:0.01',
                 'description' => 'nullable|string|max:255',
-                'document_file' => 'file|mimes:pdf,png,jpeg',
+                'document_file' => 'file|mimes:pdf,png,jpeg|required_with:document_description',
                 'document_description'=> 'required_if:document_file, file',   
             ]);
 

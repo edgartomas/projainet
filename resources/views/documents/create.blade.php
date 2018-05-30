@@ -21,28 +21,9 @@
     <br>
     <div class="row d-flex justify-content-center">
         <div class="col-6">
-            <form action="{{ route('movements.store', $account) }}" method="post" class="form-group" enctype="multipart/form-data">
+            <form action="{{ route('document.index', $movement) }}" method="post" class="form-group" enctype="multipart/form-data">
                 @csrf
-                <div class="form-group row">
-                    <label>Movement Type</label>
-                    <select class="form-control" name="movement_category_id">
-                    @foreach($categories as $category)
-                        <option {{ old('movement_category_id') == $category->id ? 'selected' : '' }} value="{{$category->id}}">{{ $category->name . " - " . $category->type}}</option>
-                    @endforeach
-                    </select>
-                </div>
-                <div class="form-group row">
-                    <label>Value</label>
-                    <input type="text" class="form-control" name="value" value="{{ old('value') }}">
-                </div>
-                <div class="form-group row">
-                    <label>Date</label>
-                    <input type="text" class="form-control" name="date" value="{{ old('date') }}">
-                </div>
-                <div class="form-group row">
-                    <label>Description</label>
-                    <input type="text" class="form-control" name="description" value="{{ old('description') }}">
-                </div>
+                
                 <div class="form-group row">
                     <label>Document</label>
                     <input type="file" class="form-control" name="document_file">

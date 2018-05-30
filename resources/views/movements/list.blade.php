@@ -50,6 +50,10 @@
                     <th>Value</th>
 					<th>End Balance</th>
 					<th></th>
+					<th>Document</th>
+					
+					
+					
 				</tr> 
 				</thead>
 				<tbody>
@@ -73,13 +77,24 @@
                         <td>
                             {{ $movement->end_balance }}
                         </td>
-						<td>
+						<td width="164.8px">
 						<a class="btn btn-primary" href="{{ route('movement.edit', $movement )}}" role="button">Edit</a>
 						<form class="form-inline" method="post" action="{{ route('movement.delete', $movement)}}" style="display: inline;">
 								@csrf
 								@method('delete')
 									<button type="submit" class="btn btn-danger">Remove</button>
 								</form>
+							<td>
+							@isset($movement->document_id)
+								<form class="form-inline" method="get" action="{{ route('document.download', $movement->document_id)}}" style="display: inline;">
+											<button type="submit" class="btn btn-primary">Download</button>
+								</form>
+								@else
+								<form class="form-inline" method="get" action="{{ route('document.index', $movement->id)}}" style="display: inline;">
+										<button type="submit" class="btn btn-primary">Upload</button>
+								</form>
+							@endisset
+							</td>
 						</td>
 					</tr>
 					@endforeach

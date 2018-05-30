@@ -11,4 +11,9 @@ class Document extends Model
     protected $fillable = [
         'type', 'original_name', 'description'
    ];
+
+   public function movement()
+    {
+        return $this->belongsTo('App\Movement');
+    }
 }

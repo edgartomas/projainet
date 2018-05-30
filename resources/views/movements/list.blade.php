@@ -86,11 +86,11 @@
 								</form>
 							<td>
 							@isset($movement->document_id)
-								<form class="form-inline" method="get" action="{{ route('document.download', $movement->document_id)}}" style="display: inline;">
+								<form class="form-inline" method="get" action="{{ route('document.download', $movement)}}" style="display: inline;">
 											<button type="submit" class="btn btn-primary">Download</button>
 								</form>
 								@else
-								<form class="form-inline" method="get" action="{{ route('document.index', $movement->id)}}" style="display: inline;">
+								<form class="form-inline" method="get" action="{{ route('document.index', $movement)}}" style="display: inline;">
 										<button type="submit" class="btn btn-primary">Upload</button>
 								</form>
 							@endisset

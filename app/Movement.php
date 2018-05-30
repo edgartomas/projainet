@@ -26,4 +26,9 @@ class Movement extends Model
     {
         return $this->belongsTo('App\MovementCategory');
     }
+
+    public function document()
+    {
+        return $this->belongsTo('App\Documents');
+    }
 }

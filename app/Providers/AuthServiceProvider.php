@@ -72,7 +72,8 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('view-document', function($auth, $movement){
-            return $auth->id == $movement->account->owner_id;
+            $user_id = $movement->account->owner_id;
+            return $auth->id ==  $user_id|| $auth->isAssociate($user_id);
         });
     }
 }

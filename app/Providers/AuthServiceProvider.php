@@ -70,5 +70,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('add-document', function($auth, $movement){
             return $auth->id == $movement->account->owner_id;
         });
+
+        Gate::define('view-document', function($auth, $movement){
+            return $auth->id == $movement->account->owner_id;
+        });
     }
 }

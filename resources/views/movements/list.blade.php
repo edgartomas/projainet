@@ -86,11 +86,10 @@
 								</form>
 							<td>
 							@isset($movement->document_id)
-								<form class="form-inline" method="get" action="{{ route('document.download', $movement)}}" style="display: inline;">
-											<button type="submit" class="btn btn-primary">Download</button>
-								</form>
+								<a class="btn btn-primary" href="{{ route('document.view', $movement->document_id)}}" role="button">View</a>
+								<a class="btn btn-primary" href="{{ action('DocumentController@download', $movement->document_id)}}" role="button">Download</a>
 								@else
-								<form class="form-inline" method="get" action="{{ route('document.index', $movement)}}" style="display: inline;">
+								<form class="form-inline" method="get" action="{{ route('document.edit', $movement)}}" style="display: inline;">
 										<button type="submit" class="btn btn-primary">Upload</button>
 								</form>
 							@endisset

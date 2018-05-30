@@ -29,6 +29,6 @@ class Movement extends Model
 
     public function document()
     {
-        return $this->belongsTo('App\Documents');
+        return $this->hasOne('App\Document');
     }
 }

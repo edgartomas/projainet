@@ -107,13 +107,19 @@ Route::group(['prefix' => 'movement/{movement}', 'middleware' => 'auth'],functio
     Route::delete('/', 'MovementController@destroy')->name('movement.delete');
 });
 
-Route::group(['prefix' => 'document/{movement}', 'middleware' => 'auth'],function(){
-    Route::get('/', 'DocumentController@index')->name('document.index');
+Route::group(['prefix' => 'documents/{movement}', 'middleware' => 'auth'],function(){
+
+    Route::get('/', 'DocumentController@edit')->name('document.edit');
     
-    
-    Route::post('/', 'DocumentController@store');
-    
+    Route::post('/', 'DocumentController@store')->name('document.update');
+});
+
+Route::group(['prefix' => 'document/{document}', 'middleware' => 'auth'],function(){
+
+    Route::get('/', 'DocumentController@view')->name('document.view');
+
     Route::delete('/', 'DocumentController@destroy')->name('document.delete');
+
 });
 
 Route::get('/dashboard/{user}', 'DashboardController@index')->middleware('auth')->name('dashboard');
@@ -121,7 +127,7 @@ Route::get('/dashboard/{user}', 'DashboardController@index')->middleware('auth')
 
 
 
-Route::get('document/{document}', 'DocumentController@download')->name('document.download');
+Route::get('document/{document}/download', 'DocumentController@download')->name('document.download');
 Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
 
 

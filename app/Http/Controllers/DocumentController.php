@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Auth;
+use App\Document;
+use App\Movement;
 
 class DocumentController extends Controller
 {
-    public function index($movement){
+    public function edit($movement){
         $movement = \App\Movement::findOrFail($movement);
         if(Auth::user()->can('add-document', $movement)){
             $title = 'Document Create';
@@ -64,14 +66,29 @@ class DocumentController extends Controller
     }
 
     public function download($document){
-        $movement = \App\Movement::findOrFail($movement);
+        $document = Document::findOrFail($document);
+
+        $movement= Movement::where('document_id',$document->id)->first();
 
         if(Auth::user()->can('view-document', $movement)){
-            $document= $movement->document;
-            return Storage::download('documents/'.$movement->account_id, $movement->id.'.'.$document->type);
+            $path = storage_path('app/documents/'. $movement->account_id . '/' . $movement->id . '.' . $document->type);
+            return response()->download($path, $document->original_name);
         }else{
             return abort(403, "Access Denied");
         }
+    }
 
+    public function view($document){
+
+        $document = Document::findOrFail($document);
+
+        $movement= Movement::where('document_id',$document->id)->first();
+
+        if(Auth::user()->can('view-document', $movement)){
+            $path = storage_path('app/documents/'. $movement->account_id . '/' . $movement->id . '.' . $document->type);
+            return response()->file($path);
+        }else{
+            return abort(403, "Access Denied");
+        }
     }
 }

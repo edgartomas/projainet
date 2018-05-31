@@ -88,9 +88,7 @@
 							@isset($movement->document_id)
 								<a class="btn btn-primary" href="{{ action('DocumentController@download', $movement->document_id)}}" role="button">Download</a>
 								@else
-								<form class="form-inline" method="get" action="{{ route('document.edit', $movement)}}" style="display: inline;">
-										<button type="submit" class="btn btn-primary">Upload</button>
-								</form>
+								<a class="btn btn-primary" href="{{ route('document.index', $movement->id )}}" role="button">Upload</a>
 							@endisset
 							</td>
 						</td>

@@ -15,22 +15,18 @@ class DashboardController extends Controller
 
         if(Auth::user()->can('view-dashboard', $user)){
 
-            $accounts = $user->allAccounts;
-
-            $total = $accounts->sum('current_balance');
-
+            $accounts = $user->allAccounts()->with('accountType')->paginate(2);
+            
+            $total = 0;
             $totalRevenue = 0;
             $totalExpense = 0;
 
-            foreach($accounts as $account){
+            
+            foreach($user->allAccounts as $account){
+                $total += $account->current_balance;
                 $totalRevenue += $account->movements()->whereType('revenue')->sum('value');
-            }
-
-            foreach($accounts as $account){
                 $totalExpense += $account->movements()->whereType('expense')->sum('value');
             }
-
-            //$totalRevenue = $accounts->movements->where('type', 'LIKE', 'revenue')->get();
 
             $title = 'Dashboard - ' . $user->name;
 

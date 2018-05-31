@@ -21,12 +21,13 @@ class DocumentController extends Controller
     }
 
     public function store(Request $request, $movement){
+
         $movement = \App\Movement::findOrFail($movement);
 
         if(Auth::user()->can('add-document', $movement)){
 
             $documentAux = $request->validate([
-                'document_file' => 'file|mimes:pdf,png,jpeg',
+                'document_file' => 'file|mimes:pdf,png,jpeg|required_with:document_description',
                 'document_description'=> 'required_if:document_file, file',   
             ]);
 

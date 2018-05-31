@@ -116,7 +116,7 @@ Route::group(['prefix' => 'documents/{movement}', 'middleware' => 'auth'],functi
 
 Route::group(['prefix' => 'document/{document}', 'middleware' => 'auth'],function(){
 
-    Route::get('/', 'DocumentController@view')->name('document.view');
+    Route::get('/', 'DocumentController@download')->name('document.download');
 
     Route::delete('/', 'DocumentController@destroy')->name('document.delete');
 
@@ -127,7 +127,6 @@ Route::get('/dashboard/{user}', 'DashboardController@index')->middleware('auth')
 
 
 
-Route::get('document/{document}/download', 'DocumentController@download')->name('document.download');
 Route::get('/home/{user}/account', 'AccountController@UserAccount')->name('home.user');
 
 

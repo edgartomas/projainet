@@ -86,7 +86,6 @@
 								</form>
 							<td>
 							@isset($movement->document_id)
-								<a class="btn btn-primary" href="{{ route('document.view', $movement->document_id)}}" role="button">View</a>
 								<a class="btn btn-primary" href="{{ action('DocumentController@download', $movement->document_id)}}" role="button">Download</a>
 								@else
 								<form class="form-inline" method="get" action="{{ route('document.edit', $movement)}}" style="display: inline;">

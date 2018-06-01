@@ -88,7 +88,7 @@
 							@isset($movement->document_id)
 								<a class="btn btn-primary" href="{{ action('DocumentController@download', $movement->document_id)}}" role="button">Download</a>
 								@else
-								<a class="btn btn-primary" href="{{ route('document.index', $movement->id )}}" role="button">Upload</a>
+								<a class="btn btn-primary" href="{{ route('document.edit', $movement->id )}}" role="button">Upload</a>
 							@endisset
 							</td>
 						</td>

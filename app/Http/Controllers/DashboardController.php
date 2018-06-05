@@ -10,7 +10,7 @@ use Lava;
 
 class DashboardController extends Controller
 {
-    public function index($user){
+    public function index(Request $request, $user){
 
         $user = User::findOrFail($user);
 
@@ -28,18 +28,28 @@ class DashboardController extends Controller
             foreach($user->allAccounts as $account){
                 $total += $account->current_balance;
 
-                $movements = $account->movements()->with('movementCategory')->get();
+                $movements = $account->movements()->get();
+
+                $totalExpense = $movements->where('type', 'expense')->sum('value');
+                $totalRevenue = $movements->where('type', 'revenue')->sum('value');
+
+                if($request->has('start-date') && $request->has('end-date')){
+                    $movements = $account->movements()->where('date', '>=',  date('Y-m-d', strtotime($request->input('start-date'))))->where('date', '<=', date('Y-m-d', strtotime($request->input('end-date'))))->with('movementCategory')->get();                    
+                } else {
+                    //Não foram passados valores pela query string
+                    //Assume-se que serão apresentados os valores do mês corrente(até ao dia corrente)
+                    $movements = $account->movements()->where('date', '>=',  date('Y-m-01'))->where('date', '<=', date('Y-m-d'))->with('movementCategory')->get();
+                }
 
                 foreach($movements as $movement){
                     if($movement->type == 'expense'){
-                        $totalExpense += $movement->value;
                         if($totalCatExp->contains('type', $movement->movementCategory->name)){
                             $totalCatExp->where('type', $movement->movementCategory->name)->first()['value'] += $movement->value;
                         } else {
                             $totalCatExp->push(['type' => $movement->movementCategory->name, 'value' => $movement->value]);
                         }
                     } else {
-                        $totalRevenue += $movement->value;
+                        
                         if($totalCatRev->contains('type', $movement->movementCategory->name)){
                             $totalCatRev->where('type', $movement->movementCategory->name)->first()['value'] += $movement->value;
                         } else {
@@ -47,6 +57,7 @@ class DashboardController extends Controller
                         }
                     }
                 }
+                
             }
 
 

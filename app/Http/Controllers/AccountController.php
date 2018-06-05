@@ -81,6 +81,7 @@ class AccountController extends Controller
         $accountModel = Account::withTrashed()->findOrFail($account);
 
         if(Auth::user()->can('edit-account', $accountModel->owner_id)){
+
             $rules = [
                 'account_type_id' => 'required|exists:account_types,id',
                 'description' => 'nullable|string|max:255',

@@ -2,6 +2,18 @@
 
 @section('content')
 <div class="container-fluid" style="margin-top: 10px">
+	<div class="row">
+		<div class="col">
+			@if ($errors->any())
+				<div class="alert alert-danger">
+					{{ $errors->first() }}
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			@endif
+		</div>
+	</div>
     <div class="row">
         <div class="col text-center">
           <h1>{{ $title }}</h1> 
@@ -66,11 +78,11 @@
 					<form>
 						<div class="form-group">
 							<label>Start Date</label>
-							<input type="text" class="form-control">
+							<input name="start-date" type="text" class="form-control" value="{{ request()->get('start-date', date('01-m-Y'))}}">
 						</div>
 						<div class="form-group">
 							<label>End Date</label>
-							<input type="text" class="form-control">
+							<input name="end-date" type="text" class="form-control" value="{{ request()->get('end-date', date('d-m-Y'))}}">
 						</div>
 						<button type="submit" class="btn btn-primary">Filter</button>
 					</form>
@@ -98,6 +110,7 @@
 								<th>Type</th>
 								<th>Balance</th>
 								<th>Percent</th>
+								<th></th>
 							</tr> 
 							</thead>
 							<tbody>
@@ -112,6 +125,9 @@
 									@if($total != 0 )
 										{{ number_format(($account->current_balance * 100 / $total), 2) }}%
 									@endif
+									</td>
+									<td>
+										<a class="btn btn-primary" href="{{ route('movements.list', $account )}}" role="button">View Movements</a>
 									</td>
 								</tr>
 								@endforeach

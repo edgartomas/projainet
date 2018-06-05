@@ -77,20 +77,32 @@
                         <td>
                             {{ $movement->end_balance }}
                         </td>
-						<td width="164.8px">
-						<a class="btn btn-primary" href="{{ route('movement.edit', $movement )}}" role="button">Edit</a>
-						<form class="form-inline" method="post" action="{{ route('movement.delete', $movement)}}" style="display: inline;">
-								@csrf
-								@method('delete')
-									<button type="submit" class="btn btn-danger">Remove</button>
+						<td>
+							@can('edit-movement', $movement->account->owner_id)
+								<a class="btn btn-primary" href="{{ route('movement.edit', $movement )}}" role="button">Edit</a>
+							@endcan
+							@can('remove-movement', $movement)
+								<form class="form-inline" method="post" action="{{ route('movement.delete', $movement)}}" style="display: inline;">
+									@csrf
+									@method('delete')
+										<button type="submit" class="btn btn-danger">Remove</button>
 								</form>
-							<td>
+							@endcan
+						</td>
+						<td>
+							@can('add-document', $movement)
+								<a class="btn btn-primary" href="{{ route('document.edit', $movement->id )}}" role="button">Upload</a>
+							@endcan
 							@isset($movement->document_id)
 								<a class="btn btn-primary" href="{{ action('DocumentController@download', $movement->document_id)}}" role="button">Download</a>
-								@else
-								<a class="btn btn-primary" href="{{ route('document.edit', $movement->id )}}" role="button">Upload</a>
+								@can('add-document', $movement)
+									<form class="form-inline" method="post" action="" style="display: inline;">
+									@csrf
+									@method('delete')
+										<button type="submit" class="btn btn-danger">Remove</button>
+									</form>
+								@endcan
 							@endisset
-							</td>
 						</td>
 					</tr>
 					@endforeach

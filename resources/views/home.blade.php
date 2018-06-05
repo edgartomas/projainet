@@ -73,7 +73,9 @@
 							@endif
 							</td>
 							<td>
+							@if(!$account->trashed())
 							<a class="btn btn-primary" href="{{ route('movements.list', $account )}}" role="button">View Movements</a>
+							@endif
 							</td>
 						</tr>
 						@endforeach

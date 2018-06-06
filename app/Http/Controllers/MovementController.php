@@ -137,7 +137,7 @@ class MovementController extends Controller
             }
             $title = 'Edit Movement';
 
-            return view('movements.edit', compact ('movement', 'title', 'categories', 'document'));
+             return view('movements.edit', compact ('movement', 'title', 'categories', 'document'));
         }
 
         return abort(403, 'Access denied');

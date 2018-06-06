@@ -61,6 +61,10 @@ class DocumentController extends Controller
 
         Storage::delete('documents/' . $movement->account_id . '/' . $movement->id . '.' . $document->type);
 
+        $movement->document_id = null;
+
+        $movement->save();
+
         $document->delete();
 
         return back()->with('status', 'Document Deleted');

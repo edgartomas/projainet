@@ -131,9 +131,13 @@ class MovementController extends Controller
 
         if(Auth::user()->can('edit-movement', $movement->account->owner_id)){
             $categories = MovementCategory::all();
+            $document = null;
+            if($movement->document_id != null){
+                $document = Document::findOrFail($movement->document_id);
+            }
             $title = 'Edit Movement';
 
-            return view('movements.edit', compact ('movement', 'title', 'categories'));
+            return view('movements.edit', compact ('movement', 'title', 'categories', 'document'));
         }
 
         return abort(403, 'Access denied');

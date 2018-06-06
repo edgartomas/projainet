@@ -28,7 +28,7 @@ class DocumentController extends Controller
 
             $documentAux = $request->validate([
                 'document_file' => 'file|mimes:pdf,png,jpeg|required_with:document_description',
-                'document_description'=> 'required_if:document_file, file',   
+                'document_description'=> 'required_with:document_file',   
             ]);
 
             if($request->hasFile('document_file') && $request->file('document_file')->isValid()){
@@ -36,12 +36,16 @@ class DocumentController extends Controller
                 $document['original_name'] = $request->file('document_file')->getClientOriginalName();
                 $document['description'] = $documentAux['document_description'];
 
-                //dd($document);
-
-                $documentID = \App\Document::create($document);
-
-                $movement['document_id'] = $documentID->id;
-                $movement->save();
+                if($movement->document_id == null){
+                    $documentID = \App\Document::create($document);
+                    $movement['document_id'] = $documentID->id;
+                    $movement->save();
+                } else {
+                    $doc = Document::findOrFail($movement->document_id);
+                    Storage::delete('documents/' . $movement->account_id . '/' . $movement->id . '.' . $doc->type);
+                    $doc->fill($document);
+                    $doc->save();
+                }
                 Storage::putFileAs('documents/'.$movement->account_id, $request->file('document_file'), $movement->id.'.'.$document['type']);
             }    
             return redirect()->route('movements.list', $movement->account_id)->with('status', 'Document added');

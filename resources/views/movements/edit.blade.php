@@ -48,7 +48,7 @@
                 </div>
                 <div class="form-group row">
                     <label>Document description</label>
-                    <input type="text" class="form-control" name="document_description" value="{{ $movement->document_description }}">
+                    <input type="text" class="form-control" name="document_description" value="{{ $document['description'] != null ? $document['description'] : '' }}">
                 </div>
                 <div class="form-group row">
                     <label>Document</label>

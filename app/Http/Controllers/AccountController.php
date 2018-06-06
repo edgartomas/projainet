@@ -86,7 +86,7 @@ class AccountController extends Controller
                 'account_type_id' => 'required|exists:account_types,id',
                 'description' => 'nullable|string|max:255',
                 'start_balance' => 'required|numeric',
-                
+                'date' => 'required|date',
             ];
     
             if($request['code'] != $accountModel->code){

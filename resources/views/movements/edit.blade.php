@@ -23,8 +23,9 @@
     <br>
     <div class="row">
         <div class="col">
-        <form action="{{ route('movement.update', $movement) }}" method="post" class="form-group">
+        <form action="{{ route('movement.update', $movement->id) }}" method="post" class="form-group">
                 @csrf
+                @method('PUT')
                 <div class="form-group row">
                     <label>Movement Type</label>
                     <select class="form-control" name="movement_category_id">

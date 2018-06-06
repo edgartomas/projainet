@@ -57,13 +57,15 @@ class DocumentController extends Controller
 
         if(Auth::user()->can('add-document', $movement)){
 
-        $document= $movement->document;
+        $document= $movement->document->delete();
         
         File::delete('document_file');
 
         }else{
             return abort(403, "Access Denied");
         }
+
+        return 
     }
 
     public function download($document){

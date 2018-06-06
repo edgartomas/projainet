@@ -42,8 +42,7 @@ class DocumentController extends Controller
 
                 $movement['document_id'] = $documentID->id;
                 $movement->save();
-                    //$filepath = $request->file('document_file')->storeAs('documents', $account->id, $movCreated->id);
-                    Storage::putFileAs('documents/'.$movement->account_id, $request->file('document_file'), $movement->id.'.'.$document['type']);
+                Storage::putFileAs('documents/'.$movement->account_id, $request->file('document_file'), $movement->id.'.'.$document['type']);
             }    
             return redirect()->route('movements.list', $movement->account_id)->with('status', 'Document added');
         }else{

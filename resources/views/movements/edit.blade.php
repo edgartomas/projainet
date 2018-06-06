@@ -23,7 +23,7 @@
     <br>
     <div class="row">
         <div class="col">
-        <form action="{{ route('movement.update', $movement->id) }}" method="post" class="form-group">
+        <form action="{{ route('movement.update', $movement->id) }}" method="post" class="form-group" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="form-group row">
@@ -48,7 +48,7 @@
                 </div>
                 <div class="form-group row">
                     <label>Document description</label>
-                    <input type="text" class="form-control" name="document_description" value="{{ $movement->document_description }}">
+                    <input type="text" class="form-control" name="document_description" value="{{ $movement->document->description }}">
                 </div>
                 <div class="form-group row">
                     <label>Document</label>

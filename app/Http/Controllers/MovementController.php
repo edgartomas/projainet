@@ -195,21 +195,27 @@ class MovementController extends Controller
         public function update(Request $request , $movement)
         {
         $movement = Movement::findOrFail($movement);
+
         
        // $movement_categories->id = $request->input('movement_categories_id');
         $movement->value=$request->input('value');
         $movement->description = $request->input('description');
-        $movement->document_description = $request->input('document_description');
-
+       
 
          $documentAux = $request->validate([
                 'document_file' => 'file|mimes:pdf,png,jpeg|required_with:document_description',
-                'document_description'=> 'required_if:document_file, file',   
+                'document_description'=> 'required_with:document_file',   
             ]);
 
         if($request->hasFile('document_file') && $request->file('document_file')->isValid()){ {
+                $document['type'] = $request->file('document_file')->getClientOriginalExtension();
+                $document['original_name'] = $request->file('document_file')->getClientOriginalName();
+                $document['description'] = $request->input('document_description');
 
-            $movement['document_id'] = $documentID->id;
+
+            $documentID = \App\Document::create($document);
+
+            $movement->document_id = $documentID->id;
             $movement->save();
                     //$filepath = $request->file('document_file')->storeAs('documents', $account->id, $movCreated->id);
             Storage::putFileAs('documents/'.$movement->account_id, $request->file('document_file'), $movement->id.'.'.$document['type']);

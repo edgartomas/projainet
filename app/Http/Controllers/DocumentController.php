@@ -39,7 +39,7 @@ class DocumentController extends Controller
                 //dd($document);
 
                 $documentID = \App\Document::create($document);
-
+                // $movemen['movement_id']]->movement_id
                 $movement['document_id'] = $documentID->id;
                 $movement->save();
                     //$filepath = $request->file('document_file')->storeAs('documents', $account->id, $movCreated->id);

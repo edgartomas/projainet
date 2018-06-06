@@ -63,11 +63,11 @@ class DocumentController extends Controller
 
         $document->delete();
 
+        return back()->with('status', 'Document Deleted');
+
         }else{
             return abort(403, "Access Denied");
         }
-
-        return 
     }
 
     public function download($document){

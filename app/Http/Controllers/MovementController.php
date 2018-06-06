@@ -198,53 +198,50 @@ class MovementController extends Controller
 
         public function update(Request $request , $movement)
         {
-        $movement = Movement::findOrFail($movement);
+            $movement = Movement::findOrFail($movement);
 
         
-       // $movement_categories->id = $request->input('movement_categories_id');
-        $movement->value=$request->input('value');
-        $movement->description = $request->input('description');
-       
-
-         $documentAux = $request->validate([
-                'document_file' => 'file|mimes:pdf,png,jpeg|required_with:document_description',
-                'document_description'=> 'required_with:document_file',   
+        if(Auth::user()->can('remove-movement', $movement)){
+            
+            $mov = $request->validate([
+                'movement_category_id' => 'required|Exists:movement_categories,id',
+                'date' => 'required|date|before:tomorrow',
+                'value' => 'required|numeric|min:0.01',
+                'description' => 'nullable|string|max:255',   
             ]);
 
-        if($request->hasFile('document_file') && $request->file('document_file')->isValid()){ {
+            $request->validate([
+                    'document_file' => 'file|mimes:pdf,png,jpeg',
+                    'document_description'=> 'required_with:document_file',   
+            ]);
+
+            if($request->hasFile('document_file') && $request->file('document_file')->isValid()){
                 $document['type'] = $request->file('document_file')->getClientOriginalExtension();
                 $document['original_name'] = $request->file('document_file')->getClientOriginalName();
                 $document['description'] = $request->input('document_description');
 
 
-            $documentID = \App\Document::create($document);
+                if($movement->document_id == null){
+                    $documentID = Document::create($document);
+                    $movement->document_id = $documentID->id;
+                    $movement->save();
+                } else {
+                    $doc = Document::findOrFail($movement->document_id);
+                    Storage::delete('documents/' . $movement->account_id . '/' . $movement->id . '.' . $doc->type);
+                    $doc->fill($document);
+                    $doc->save();
+                }
 
-            $movement->document_id = $documentID->id;
+                Storage::putFileAs('documents/'.$movement->account_id, $request->file('document_file'), $movement->id.'.'.$document['type']);
+            }
+
+            $movement->fill($mov);
             $movement->save();
-                    //$filepath = $request->file('document_file')->storeAs('documents', $account->id, $movCreated->id);
-            Storage::putFileAs('documents/'.$movement->account_id, $request->file('document_file'), $movement->id.'.'.$document['type']);
-
-        }
 
             return redirect()->route('movements.list', $movement->account_id)->with('status', 'Document added');
-
-        
          }else{
             return abort(403, "Access Denied");
         }
-
-        /*$movements = $account->movements()->where('date', '>', $movement['date'])->orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();
-
-
-        foreach ($movements as $movement) 
-        {
-           if ($request->input('date') == $movement ) {
-                $movement->date = $request->input('date');                     
-            }
-        }
-        */
-
-
       }  
 
 

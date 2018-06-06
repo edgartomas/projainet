@@ -36,16 +36,6 @@ class DocumentController extends Controller
                 $document['original_name'] = $request->file('document_file')->getClientOriginalName();
                 $document['description'] = $documentAux['document_description'];
 
-
-                //dd($document);
-
-                $documentID = \App\Document::create($document);
-                // $movemen['movement_id']]->movement_id
-                $movement['document_id'] = $documentID->id;
-                $movement->save();
-                    //$filepath = $request->file('document_file')->storeAs('documents', $account->id, $movCreated->id);
-                    Storage::putFileAs('documents/'.$movement->account_id, $request->file('document_file'), $movement->id.'.'.$document['type']);
-
                 if($movement->document_id == null){
                     $documentID = \App\Document::create($document);
                     $movement['document_id'] = $documentID->id;

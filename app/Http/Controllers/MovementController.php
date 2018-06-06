@@ -82,7 +82,7 @@ class MovementController extends Controller
 
                 $account->last_movement_date = $movement['date'];
             } else {
-                
+
                 $movements = $account->movements()->where('date', '>', $movement['date'])->orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();
 
                 $movement['start_balance'] = $movements->last()->start_balance;
@@ -108,7 +108,7 @@ class MovementController extends Controller
 
                 $movement['document_id'] = $documentID->id;
             }
-   
+
             
             $account->save();
             $movCreated = Movement::create($movement);
@@ -116,7 +116,7 @@ class MovementController extends Controller
                 //$filepath = $request->file('document_file')->storeAs('documents', $account->id, $movCreated->id);
                 Storage::putFileAs('documents/'.$account->id, $request->file('document_file'), $movCreated->id.'.'.$document['type']);
             }
-               
+
 
             return redirect()->route('movements.list', $account->id)->with('status', 'Movement created');
         } else {
@@ -130,10 +130,10 @@ class MovementController extends Controller
         $movement = Movement::findOrFail($movement);
 
         if(Auth::user()->can('edit-movement', $movement->account->owner_id)){
-        $categories = MovementCategory::all();
-        $title = 'Edit Movement';
-       
-        return view('movements.edit', compact ('movement', 'title', 'categories'));
+            $categories = MovementCategory::all();
+            $title = 'Edit Movement';
+
+            return view('movements.edit', compact ('movement', 'title', 'categories'));
         }
 
         return abort(403, 'Access denied');
@@ -189,7 +189,55 @@ class MovementController extends Controller
         } else {
             return abort(403, 'Access denied.');
         }
-
-       
     }
-}
+    
+
+        public function update(Request $request , $movement)
+        {
+        $movement = Movement::findOrFail($movement);
+        
+       // $movement_categories->id = $request->input('movement_categories_id');
+        $movement->value=$request->input('value');
+        $movement->description = $request->input('description');
+        $movement->document_description = $request->input('document_description');
+
+
+         $documentAux = $request->validate([
+                'document_file' => 'file|mimes:pdf,png,jpeg|required_with:document_description',
+                'document_description'=> 'required_if:document_file, file',   
+            ]);
+
+        if($request->hasFile('document_file') && $request->file('document_file')->isValid()){ {
+
+            $movement['document_id'] = $documentID->id;
+            $movement->save();
+                    //$filepath = $request->file('document_file')->storeAs('documents', $account->id, $movCreated->id);
+            Storage::putFileAs('documents/'.$movement->account_id, $request->file('document_file'), $movement->id.'.'.$document['type']);
+
+        }
+
+            return redirect()->route('movements.list', $movement->account_id)->with('status', 'Document added');
+
+        
+         }else{
+            return abort(403, "Access Denied");
+        }
+
+        /*$movements = $account->movements()->where('date', '>', $movement['date'])->orderBy('date', 'desc')->orderBy('created_at', 'desc')->get();
+
+
+        foreach ($movements as $movement) 
+        {
+           if ($request->input('date') == $movement ) {
+                $movement->date = $request->input('date');                     
+            }
+        }
+        */
+
+
+      }  
+
+
+    }   
+
+

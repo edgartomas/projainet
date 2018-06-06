@@ -58,6 +58,13 @@
                     name="start_balance" id="start_balance"
                     value="{{ old('start_balance' , $account->start_balance) }}"/>
             </div>
+            <div class="form-group row">
+                <label for="inputPasswordConfirmation">Date</label>
+                <input
+                    type="text" class="form-control"
+                    name="start_balance" id="start_balance"
+                    value="{{ old('date' , $account->date) }}"/>
+            </div>
             <div class="form-group row" >
                 <button type="submit" class="btn btn-primary">Edit</button>
                 <a  class="btn btn-default"  href="{{ URL::previous() }}" name="cancel">Cancel</button>

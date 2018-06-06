@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Account;
 use App\User;
+use App\Document;
 use App\MovementCategory;
 
 class MovementController extends Controller
@@ -161,7 +162,20 @@ class MovementController extends Controller
                 $mov->save();
             }
 
-            $movement->delete();
+            if($movement->document_id != null){
+
+                $document = Document::where('id', '=', $movement->document_id)->get()->first();
+
+                Storage::delete('documents/' . $movement->account_id . '/' . $movement->id . '.' . $document->type);
+
+                $movement->delete();
+                $document->delete();
+                
+            } else {
+                $movement->delete();
+            }
+
+            
 
             if($movement->date == $account->last_movement_date && $movement->end_balance == $account->current_balance){
                 $account->last_movement_date = $account->movements->max('date');

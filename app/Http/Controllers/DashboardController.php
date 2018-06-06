@@ -30,10 +30,10 @@ class DashboardController extends Controller
 
                 $movements = $account->movements()->get();
 
-                $totalExpense = $movements->where('type', 'expense')->sum('value');
-                $totalRevenue = $movements->where('type', 'revenue')->sum('value');
+                $totalExpense += $movements->where('type', 'expense')->sum('value');
+                $totalRevenue += $movements->where('type', 'revenue')->sum('value');
 
-                if($request->has('start-date') && $request->has('end-date')){
+                if($request->input('start-date') != null && $request->input('end-date') != null){
                     $movements = $account->movements()->where('date', '>=',  date('Y-m-d', strtotime($request->input('start-date'))))->where('date', '<=', date('Y-m-d', strtotime($request->input('end-date'))))->with('movementCategory')->get();                    
                 } else {
                     //Não foram passados valores pela query string

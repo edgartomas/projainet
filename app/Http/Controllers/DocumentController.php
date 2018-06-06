@@ -56,10 +56,14 @@ class DocumentController extends Controller
         $movement = \App\Movement::findOrFail($movement);
 
         if(Auth::user()->can('add-document', $movement)){
-
-        $document= $movement->document;
         
-        File::delete('document_file');
+        $document = Document::where('id', '=', $movement->document_id)->get()->first();
+
+        Storage::delete('documents/' . $movement->account_id . '/' . $movement->id . '.' . $document->type);
+
+        $document->delete();
+
+        return back()->with('status', 'Document Deleted');
 
         }else{
             return abort(403, "Access Denied");

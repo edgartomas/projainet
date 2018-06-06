@@ -8,6 +8,7 @@ use App\User;
 use Auth;
 use App\Rules\ValidatePassword;
 use Illuminate\Support\Facades\Hash;
+use Storage;
 
 class UserController extends Controller
 {
@@ -126,6 +127,8 @@ class UserController extends Controller
 
     public function update(Request $request){
 
+        $userModel = User::findOrFail(Auth::user()->id);
+
         $rules = [
             'name' => 'required|string|max:255|regex:/^[a-zA-Z .]+$/',
             'phone' => 'nullable|string|regex:/^[0-9 +\s]+$/',
@@ -139,13 +142,17 @@ class UserController extends Controller
         $user = $request->validate($rules);
 
         if($request->hasfile('profile_photo') && $request->file('profile_photo')->isValid()){
-            
+
+            if($userModel->profile_photo != null){
+                Storage::delete('public/profiles/' . $userModel->profile_photo);
+            }
+
             $filepath = $request->file('profile_photo')->store('profiles', 'public');
 
             $user['profile_photo'] = basename($filepath);  
         }
 
-        $userModel = User::findOrFail(Auth::user()->id);
+        
         $userModel->fill($user);
         $userModel->save();
 

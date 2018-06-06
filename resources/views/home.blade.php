@@ -27,7 +27,7 @@
 					Total Balance
 				</div>
 				<ul class="list-group list-group-flush">
-					<li class="list-group-item text-center">{{ number_format($total, 2, '.', ',') }}</li>
+					<li class="list-group-item text-center">{{ number_format($total, 2, '.', ',') }} €</li>
 				</ul>
 			</div>
 			<div class="card border-primary" style="margin-bottom:10px;">
@@ -35,7 +35,7 @@
 					Total Revenue
 				</div>
 				<ul class="list-group list-group-flush text-center">
-					<li class="list-group-item">{{ number_format($totalExpense, 2, '.', ',') }}</li>
+					<li class="list-group-item">{{ number_format($totalRevenue, 2, '.', ',') }} €</li>
 				</ul>
 			</div>
 			<div class="card border-primary">
@@ -43,7 +43,7 @@
 					Total Expense
 				</div>
 				<ul class="list-group list-group-flush">
-					<li class="list-group-item text-center">{{ number_format($totalRevenue, 2, '.', ',') }}</li>
+					<li class="list-group-item text-center">{{ number_format($totalExpense, 2, '.', ',') }} €</li>
 				</ul>
 			</div>
 		</div>
@@ -69,7 +69,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col">
+		<div class="col-2">
 			<div class="card border-primary text-center" style="height:100%;">
 				<div class="card-header bg-primary text-white">
 					Filter
@@ -78,11 +78,11 @@
 					<form>
 						<div class="form-group">
 							<label>Start Date</label>
-							<input name="start-date" type="text" class="form-control" value="{{ request()->get('start-date', date('01-m-Y'))}}">
+							<input name="start-date" type="text" class="form-control" value="{{ request()->get('start-date') != null ? request()->get('start-date') : date('01-m-Y') }}">
 						</div>
 						<div class="form-group">
 							<label>End Date</label>
-							<input name="end-date" type="text" class="form-control" value="{{ request()->get('end-date', date('d-m-Y'))}}">
+							<input name="end-date" type="text" class="form-control" value="{{ request()->get('end-date') != null ? request()->get('end-date') : date('d-m-Y') }}">
 						</div>
 						<button type="submit" class="btn btn-primary">Filter</button>
 					</form>
@@ -120,7 +120,7 @@
 										{{ $account->code}}
 									</td>
 									<td>{{ $account->accountType->name }}</td>
-									<td>{{ $account->current_balance }}</td>
+									<td>{{ $account->current_balance }} €</td>
 									<td>
 									@if($total != 0 )
 										{{ number_format(($account->current_balance * 100 / $total), 2) }}%
@@ -141,10 +141,76 @@
 			</div>	
 		</div>
 	</div>
+	<br>
 	<div class="row">
 		<div class="col">
-
+			<div class="card border-primary">
+				<div class="card-header bg-primary text-white">
+					Revenues by category
+				</div>
+				<div class="card-body">
+					@if(count($totalCatRev) == 0)
+						<h4>No accounts found</h4>
+					@else
+						<table class="table">
+							<thead> 
+							<tr>
+								<th>Category</th>
+								<th>Balance</th>
+							</tr> 
+							</thead>
+							<tbody>
+								@foreach ($totalCatRev as $catRev)
+								<tr>
+									<td>
+										{{ $catRev['type'] }} €
+									</td>
+									<td>
+										{{ $catRev['value'] }} €
+									</td>
+								</tr>
+								@endforeach
+							</tbody>
+						</table>
+					@endif
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card border-primary">
+					<div class="card-header bg-primary text-white">
+						Expenses by category
+					</div>
+					<div class="card-body">
+						@if(count($totalCatExp) == 0)
+							<h4>No accounts found</h4>
+						@else
+							<table class="table">
+								<thead> 
+								<tr>
+									<th>Category</th>
+									<th>Balance</th>
+								</tr> 
+								</thead>
+								<tbody>
+									@foreach ($totalCatExp as $catExp)
+									<tr>
+										<td>
+											{{ $catExp['type'] }}
+										</td>
+										<td>
+											{{ $catExp['value'] }} €
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
+							</table>
+						@endif
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
+<br>
 @endsection

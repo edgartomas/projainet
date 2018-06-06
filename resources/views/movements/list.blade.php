@@ -96,7 +96,7 @@
 							@isset($movement->document_id)
 								<a class="btn btn-primary" href="{{ action('DocumentController@download', $movement->document_id)}}" role="button">Download</a>
 								@can('add-document', $movement)
-									<form class="form-inline" method="post" action="" style="display: inline;">
+									<form class="form-inline" method="post" action="{{ route('document.delete', $movement) }}" style="display: inline;">
 									@csrf
 									@method('delete')
 										<button type="submit" class="btn btn-danger">Remove</button>

@@ -6,7 +6,7 @@
             <br>
             <div class="jumbotron">
                 <h1 class="display-4">{{ $title }}</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc gravida feugiat odio. In hac habitasse platea dictumst. Vivamus tristique tellus eu nisi luctus faucibus. Maecenas sollicitudin tincidunt vehicula. Etiam quis neque ut ligula suscipit iaculis. Sed tristique lacus a orci ultricies, ac ultrices neque venenatis. Donec tincidunt lobortis consectetur. Nunc.</p>
+                <p>Aplicação para gestão de finanças pessoais.</p>
             </div>
         </div>
     </div>

@@ -98,7 +98,9 @@ class DocumentController extends Controller
         $movement= Movement::where('document_id',$document->id)->first();
 
         if(Auth::user()->can('view-document', $movement)){
+
             $path = storage_path('app/documents/'. $movement->account_id . '/' . $movement->id . '.' . $document->type);
+
             return response()->file($path);
         }else{
             return abort(403, "Access Denied");

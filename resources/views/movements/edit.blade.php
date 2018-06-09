@@ -50,7 +50,7 @@
                     <label>Document description</label>
 
                    
-                    <input type="text" class="form-control" name="document_description" value="{{ $document['description'] != null ? $document['description'] : '' }}">
+                    <input type="text" class="form-control" name="document_description">
 
                 </div>
                 <div class="form-group row">

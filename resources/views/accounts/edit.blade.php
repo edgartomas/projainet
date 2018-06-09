@@ -62,7 +62,7 @@
                 <label for="inputPasswordConfirmation">Date</label>
                 <input
                     type="text" class="form-control"
-                    name="start_balance" id="start_balance"
+                    name="date"
                     value="{{ old('date' , $account->date) }}"/>
             </div>
             <div class="form-group row" >

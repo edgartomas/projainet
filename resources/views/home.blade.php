@@ -150,7 +150,7 @@
 				</div>
 				<div class="card-body">
 					@if(count($totalCatRev) == 0)
-						<h4>No accounts found</h4>
+						<h4>No revenues found</h4>
 					@else
 						<table class="table">
 							<thead> 
@@ -183,7 +183,7 @@
 					</div>
 					<div class="card-body">
 						@if(count($totalCatExp) == 0)
-							<h4>No accounts found</h4>
+							<h4>No expenses found</h4>
 						@else
 							<table class="table">
 								<thead> 

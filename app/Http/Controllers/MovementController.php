@@ -68,6 +68,8 @@ class MovementController extends Controller
 
             $movement['type'] = $category->type;
 
+            $movement['value'] = $movement['value']; 
+
             $difference = $movement['value'];
 
             if($movement['type'] == 'expense'){

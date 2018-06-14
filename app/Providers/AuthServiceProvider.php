@@ -52,7 +52,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('add-movement', function($auth, $owner_id){
-            return $auth->id == $owner_id;
+            return $auth->id == $owner_id || $auth->isAssociate($owner_id);
         });
 
         Gate::define('edit-movement', function($auth, $owner_id){
@@ -73,7 +73,7 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('view-document', function($auth, $movement){
             $user_id = $movement->account->owner_id;
-            return $auth->id ==  $user_id|| $auth->isAssociate($user_id);
+            return $auth->id ==  $user_id || $auth->isAssociate($user_id);
         });
     }
 }

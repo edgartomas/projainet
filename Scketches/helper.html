@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Help</title>
+</head>
+<body>
+    <p>
+        Texto
+        <br>
+        <input type="text" name="fullname">
+    </p>
+    <hr>
+    <p>
+        Password
+        <br>
+        <input type="password">
+    </p>
+    <hr>
+    <p>
+        Radio
+        <br>
+        <label for="input_sex_male_id">Male:</label>
+        <input type="radio" name="input_sex" id="input_sex_male_id" value="male" checked>
+        <label for="input_sex_female_id">Female:</label>
+        <input type="radio" name="input_sex" id="input_sex_female_id" value="female" checked>
+    </p>
+    <hr>
+    <p>
+        Checkbox (One value)
+        <br>
+        <label for="id_active">Is active:</label>
+        <input type="checkbox" name="active" id="id_actve" value="active" checked>
+    </p>
+    <fieldset>
+        <legend>Checkbox (Multiple values)</legend>
+        <label for="id_ti">TI:</label>
+        <input type="checkbox" name="courses[]" id="id_ti" value="TI">
+        <br>
+        <label>AInet:</label>
+        <input type="checkbox" name="courses[]" id="id_actve" value="AInet">
+        <br>
+        <label>DAD:</label>
+        <input type="checkbox" name="courses[]" id="id_actve" value="DAD">
+    </fieldset>
+    <p>
+        Select (One value)
+        <select name="active_course">
+            <option value="TI">TI</option>
+            <option value="AInet" selected>AInet</option>
+            <option value="DAD">DAD</option>
+        </select>
+    </p>
+    <hr>
+    <p>
+        Select (Multiple values)
+        <select name="multiple_courses" multiple>
+            <option value="TI">TI</option>
+            <option value="AInet" selected>AInet</option>
+            <option value="DAD">DAD</option>
+        </select>
+    </p>
+</body>
+</html>

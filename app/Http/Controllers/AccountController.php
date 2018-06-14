@@ -138,7 +138,7 @@ class AccountController extends Controller
     public function opened($user){
         if(Auth::user()->can('view-account', $user)){
             $user = User::findOrFail($user);
-            $accounts = $user->accounts()->with('accountType')->paginate(10);
+            $accounts = $user->accounts()->where('current_balance', '>', 100)->with('accountType')->paginate(10);
             $title = 'List of open accounts - ' . $user->name;
             return view('accounts.open', compact('title','accounts', 'user'));
         } else {
